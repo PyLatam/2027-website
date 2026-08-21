@@ -1,18 +1,22 @@
-import { CircuitTraces } from '@/components/decor/CircuitTraces';
-import { Coral } from '@/components/decor/Coral';
-import { PalmLeaf } from '@/components/decor/PalmLeaf';
-import { SandCove } from '@/components/decor/SandCove';
-import { Shoreline } from '@/components/decor/Shoreline';
+import {
+  BrandShape,
+  CircuitTraces,
+  PalmTree,
+  SandCove,
+  SeaRock,
+  Shoreline,
+} from '@/components/decor';
 
 import styles from './HeroDecor.module.css';
 
 /**
- * Frames the hero with the key art's motifs, painted back to front:
- * circuit traces, canopy palms, then the surf, the beach, and finally the reef
- * that sits in front of the water.
+ * The scene the headline sits in, painted strictly back to front:
  *
- * Everything here is `aria-hidden` and non-interactive — the message must read
- * identically with images and CSS backgrounds stripped away.
+ *   circuit traces → canopy → water → beach → reef → foreground planting
+ *
+ * Composition and placement live here; the shapes themselves know nothing
+ * about where they end up. Everything is `aria-hidden` and non-interactive —
+ * the message must read identically with every image stripped away.
  */
 export function HeroDecor() {
   return (
@@ -21,58 +25,71 @@ export function HeroDecor() {
       <CircuitTraces className={`${styles.traces} ${styles.tracesTopLeft}`} />
       <CircuitTraces className={`${styles.traces} ${styles.tracesRight}`} />
 
-      {/* --- canopy --- */}
-      <PalmLeaf
+      {/*
+        Canopy: fronds hanging from the top edge, all pointing down and clearly
+        spaced. The key art never overlaps two large leaves — that reads as a
+        mess, not as foliage.
+      */}
+      <BrandShape
+        name="leaf-frond-02"
         color="var(--c-aqua-500)"
-        colorTo="var(--c-ocean-400)"
         className={`${styles.item} ${styles.leafTopLeft} ${styles.float}`}
       />
-      <PalmLeaf
-        color="var(--c-sun-500)"
-        colorTo="var(--c-coral-500)"
-        leaflets={10}
-        className={`${styles.item} ${styles.leafTopLeftAccent} ${styles.floatSlow}`}
+      <BrandShape
+        name="leaf-frond-02"
+        color="var(--c-ocean-500)"
+        className={`${styles.item} ${styles.leafTopLeftMid} ${styles.floatSlow}`}
       />
-      <PalmLeaf
+      <BrandShape
+        name="leaf-frond-01"
+        color="var(--c-tangerine-500)"
+        className={`${styles.item} ${styles.leafTopLeftAccent} ${styles.float}`}
+      />
+      <BrandShape
+        name="leaf-frond-02"
         color="var(--c-aqua-500)"
-        colorTo="var(--c-ocean-500)"
         className={`${styles.item} ${styles.leafTopRight} ${styles.floatSlow}`}
       />
-      <PalmLeaf
-        color="var(--c-sun-400)"
-        colorTo="var(--c-sun-500)"
-        leaflets={10}
-        className={`${styles.item} ${styles.leafTopRightAccent} ${styles.float}`}
-      />
 
-      {/* --- shore --- */}
+      {/* --- water and beach (the jungle is drawn inside SandCove) --- */}
       <Shoreline className={styles.shoreline} />
       <SandCove className={styles.sand} />
+      <PalmTree
+        trunkColor="var(--c-aqua-600)"
+        crownColor="var(--c-aqua-600)"
+        className={`${styles.item} ${styles.palmTreeFar} ${styles.floatSlow}`}
+      />
+      <PalmTree
+        trunkColor="var(--c-ocean-400)"
+        crownColor="var(--c-ocean-400)"
+        fronds={8}
+        flip
+        className={`${styles.item} ${styles.palmTreeNear} ${styles.float}`}
+      />
+      <SeaRock className={`${styles.item} ${styles.rock}`} />
 
       {/* --- reef, in front of the water --- */}
-      <Coral
-        color="var(--c-coral-500)"
-        className={`${styles.item} ${styles.coralLeft}`}
-      />
-      <Coral
+      <BrandShape
+        name="coral-staghorn"
         color="var(--c-aqua-500)"
-        variant="fan"
-        className={`${styles.item} ${styles.coralLeftFan}`}
+        className={`${styles.item} ${styles.coralTeal}`}
       />
-      <Coral
-        color="var(--c-coral-300)"
-        className={`${styles.item} ${styles.coralRight}`}
-      />
-      <PalmLeaf
-        color="var(--c-aqua-600)"
-        colorTo="var(--c-aqua-300)"
-        className={`${styles.item} ${styles.leafBottomRight} ${styles.float}`}
-      />
-      <PalmLeaf
+      <BrandShape
+        name="coral-branch"
         color="var(--c-coral-500)"
-        colorTo="var(--c-coral-300)"
-        leaflets={9}
-        className={`${styles.item} ${styles.leafBottomRightAccent} ${styles.floatSlow}`}
+        className={`${styles.item} ${styles.coralRed}`}
+      />
+      <BrandShape
+        name="coral-fan"
+        color="var(--c-aqua-600)"
+        className={`${styles.item} ${styles.coralFan}`}
+      />
+
+      {/* --- foreground: one leaf, entering from the corner --- */}
+      <BrandShape
+        name="leaf-frond-01"
+        color="var(--c-coral-500)"
+        className={`${styles.item} ${styles.featherRight} ${styles.floatSlow}`}
       />
     </div>
   );

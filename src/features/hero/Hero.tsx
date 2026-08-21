@@ -1,4 +1,4 @@
-import { PythonEmblem } from '@/components/decor/PythonEmblem';
+import { BrandMark } from '@/components/decor';
 import { useTranslation } from '@/i18n/useTranslation';
 
 import { HeroDecor } from './HeroDecor';
@@ -19,7 +19,7 @@ export function Hero() {
       <HeroDecor />
 
       <div className={styles.inner}>
-        <PythonEmblem title={t('logo.alt')} className={styles.emblem} />
+        <BrandMark title={t('logo.alt')} className={styles.emblem} />
 
         <h1 className={styles.copy}>
           <span className="visually-hidden">{t('hero.aria')}</span>

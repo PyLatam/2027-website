@@ -13,33 +13,56 @@
 :root {
   color-scheme: light;
 
-  /* ---------------------------------------------------------------- palette */
+  /* ---------------------------------------------------------------- palette
+   * The five brand colours are taken verbatim from the official mark
+   * (`src/assets/pycon-latam-rd-mark.svg`). Every ramp below is built around
+   * them, so nothing on the page can drift away from the logo.
+   */
+  --c-brand-blue: #31add0;
+  --c-brand-yellow: #fec822;
+  --c-brand-teal: #48bab7;
+  --c-brand-coral: #ea5363;
+  --c-brand-orange: #ee8827;
+
   --c-paper: #fbfdfd;
-  --c-foam-100: #f0fafc;
-  --c-foam-200: #dff2f8;
-  --c-foam-300: #c4e8f2;
+  --c-foam-100: #f2fafd;
+  --c-foam-200: #e2f3f9;
+  --c-foam-300: #c9e9f3;
 
-  --c-ocean-200: #a8ddee;
-  --c-ocean-300: #7bcbe4;
-  --c-ocean-400: #4fbedb;
-  --c-ocean-500: #2ba7c9;
-  --c-ocean-600: #1e88a8;
-  --c-ocean-700: #17697f;
+  --c-ocean-100: #ddf1f8;
+  --c-ocean-200: #b7e3f0;
+  --c-ocean-300: #86d0e5;
+  --c-ocean-400: #56bcdb;
+  --c-ocean-500: var(--c-brand-blue);
+  --c-ocean-600: #2790ae;
+  --c-ocean-700: #1f7189;
 
-  --c-aqua-300: #7fd9cf;
-  --c-aqua-500: #3fbfb4;
-  --c-aqua-600: #2ba296;
+  --c-aqua-300: #8ad8d3;
+  --c-aqua-400: #66c9c5;
+  --c-aqua-500: var(--c-brand-teal);
+  --c-aqua-600: #369a97;
+  --c-aqua-700: #2a7d7a;
 
-  --c-coral-300: #ff9aa8;
-  --c-coral-500: #f94b63;
-  --c-coral-600: #e6314c;
+  --c-coral-300: #f59aa4;
+  --c-coral-400: #f07683;
+  --c-coral-500: var(--c-brand-coral);
+  --c-coral-600: #d33c4d;
 
-  --c-sun-300: #ffd875;
-  --c-sun-400: #f9c33c;
-  --c-sun-500: #f2ac16;
+  --c-sun-300: #ffe07a;
+  --c-sun-400: var(--c-brand-yellow);
+  --c-sun-500: #eeb00c;
 
-  --c-sand-200: #fbeed6;
-  --c-sand-300: #f5e0bb;
+  --c-tangerine-400: #f5a04a;
+  --c-tangerine-500: var(--c-brand-orange);
+
+  --c-sand-100: #fdf4e2;
+  --c-sand-200: #f9e8ca;
+  --c-sand-300: #f3d9a8;
+  --c-sand-400: #f2c451;
+
+  --c-jungle-400: #4fbab0;
+  --c-jungle-500: #3aa39c;
+  --c-jungle-600: #2e8f86;
 
   --c-ink-700: #1e5d70;
   --c-ink-900: #123b49;
@@ -59,9 +82,19 @@
   --color-focus: var(--c-ocean-600);
 
   /* ---------------------------------------------------------- typography */
-  --font-display: 'Kanit', 'Segoe UI', system-ui, sans-serif;
-  --font-script: 'Kaushan Script', 'Segoe Script', cursive;
+  /*
+   * The brand font is Freehand 521 BT (Bitstream), which is commercial and not
+   * on Google Fonts. These are the closest free stand-ins for the two roles the
+   * key art uses it in. If the licence is ever bought, swap the two families
+   * here and nothing else changes.
+   */
+  --font-display: 'Courgette', 'Segoe Script', cursive;
+  --font-script: 'Yellowtail', 'Segoe Script', cursive;
   --font-ui: 'Outfit', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  /* Courgette is lighter than the key art's display weight; a hairline stroke
+     closes the gap without a second font file. */
+  --display-stroke: 0.032em;
 
   /* Fluid scale: min at 360px viewport, max at 1440px. */
   --step-xs: clamp(0.75rem, 0.69rem + 0.28vw, 0.9rem);

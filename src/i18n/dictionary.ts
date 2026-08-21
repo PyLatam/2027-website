@@ -19,7 +19,7 @@ const es = {
 
   'venue.country': 'República Dominicana',
 
-  'logo.alt': 'Logo de Python en versión tropical caribeña',
+  'logo.alt': 'Logotipo de PyCon Latam RD, Punta Cana',
 
   'lang.legend': 'Idioma',
   'lang.switchTo': 'Cambiar idioma a {language}',
@@ -45,7 +45,7 @@ const en: Messages = {
 
   'venue.country': 'Dominican Republic',
 
-  'logo.alt': 'Python logo in a tropical Caribbean treatment',
+  'logo.alt': 'PyCon Latam RD logo, Punta Cana',
 
   'lang.legend': 'Language',
   'lang.switchTo': 'Switch language to {language}',

@@ -42,7 +42,18 @@ CI runs exactly these four. Run them before reporting a change as done.
 - Add copy by adding a key to the `es` dictionary — the `Messages` type then
   forces the `en` translation to exist. Never inline a user-facing string.
 - Never hardcode a colour, font or duration; read a token from
-  `src/styles/tokens.css`.
-- New decorative shapes go in `src/components/decor/` as pure SVG components
-  that take `className`/`style` and know nothing about where they sit.
+  `src/styles/tokens.css`. The five brand colours come from the official logo.
+- **Never redraw the logo, and never redraw supplied artwork.** `BrandMark`
+  inlines the designer's mark; `BrandShape` inlines the supplied leaves, corals
+  and dots. Check the catalogue in `src/components/decor/shapes.ts` _before_
+  drawing anything new.
+- Scenery with no supplied artwork builds on the generators in `src/lib/svg/`
+  (`ribbonPath`, `canopyBlobs`) rather than hand-written path
+  data, and goes in `src/components/decor/` as pure components that take
+  `className`/`style` and know nothing about where they sit.
+- Every decor item must set its own `width` in `HeroDecor.module.css`. Forget it
+  and the fallback in `.item` keeps it small instead of covering the page —
+  but that fallback is a safety net, not a size.
+- Randomness in artwork is always seeded (`createRandom`). `Math.random()` in a
+  shape is a bug: it makes the scene reshuffle on every render.
 - Prefer editing a token or a `clamp()` over adding a new media query.

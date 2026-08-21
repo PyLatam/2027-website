@@ -1,9 +1,10 @@
 /*
- * Purely decorative layer. Never receives pointer events or focus.
+ * Placement for the decorative layer.
  *
- * Every piece is sized with `clamp()` against the viewport so the composition
- * keeps the same proportions from a 320px phone to an ultrawide display, and
- * the crowded pieces drop out at the breakpoints where they stop reading.
+ * Sizes use `clamp()` against `vmax` so the frame keeps its proportions from a
+ * 320px phone to an ultrawide display — `vw` alone collapses the corners on
+ * tall portrait screens. Crowded pieces drop out at the breakpoints where they
+ * stop reading rather than being shrunk into noise.
  */
 
 .layer {
@@ -16,9 +17,14 @@
 
 .item {
   position: absolute;
+  /* Fallback size: a piece that forgets its own `width` degrades to a small
+     shape instead of stretching across the whole hero. */
+  width: 6rem;
   height: auto;
   will-change: transform;
 }
+
+/* --- water and beach ---------------------------------------------------- */
 
 .shoreline {
   position: absolute;
@@ -32,9 +38,31 @@
   position: absolute;
   right: 0;
   bottom: 0;
-  width: clamp(11rem, 30vw, 30rem);
-  height: clamp(7rem, 24vh, 17rem);
+  width: clamp(13rem, 38vw, 40rem);
+  height: clamp(8.5rem, 30vh, 22rem);
 }
+
+.rock {
+  bottom: clamp(2rem, 7vh, 5rem);
+  left: 53%;
+  width: clamp(3rem, 6vmax, 7.5rem);
+}
+
+/* --- jungle ------------------------------------------------------------- */
+
+.palmTreeFar {
+  right: 15%;
+  bottom: clamp(3.5rem, 11.5vh, 8.5rem);
+  width: clamp(4rem, 7vmax, 9rem);
+}
+
+.palmTreeNear {
+  right: 6%;
+  bottom: clamp(5rem, 17vh, 12.5rem);
+  width: clamp(5rem, 8.5vmax, 11rem);
+}
+
+/* --- background texture ------------------------------------------------- */
 
 .traces {
   position: absolute;
@@ -56,69 +84,79 @@
   transform: scaleX(-1);
 }
 
-/* --- canopy ------------------------------------------------------------- */
+/* --- canopy -------------------------------------------------------------
+ * Every frond hangs from the top edge with its stem off canvas.
+ *
+ * **Nothing here may reach the headline.** The copy column is centred and at
+ * most `--content-max` wide, so on a 1440px viewport it ends around 16% from
+ * the right edge — a frond drifting into that band sits behind the type and
+ * muddies it, even though the text paints on top.
+ *
+ * `transform-origin` is the stem's base, not the box centre: rotating about the
+ * centre swings a large frond right out of the viewport, which is exactly the
+ * bug this replaced. `leaf-frond-02` rests pointing right (base at its left
+ * edge); `leaf-frond-01` rests pointing up-right (base at its bottom-left).
+ */
 
 .leafTopLeft {
-  top: -5%;
-  left: -4%;
-  width: clamp(8rem, 14vmax, 17rem);
-  transform: rotate(196deg);
+  top: -6%;
+  left: 0%;
+  width: clamp(10rem, 17vmax, 22rem);
+  transform-origin: 5% 50%;
+  transform: rotate(64deg);
+}
+
+.leafTopLeftMid {
+  top: -8%;
+  left: 15%;
+  width: clamp(7rem, 12vmax, 15rem);
+  transform-origin: 5% 50%;
+  transform: rotate(96deg);
 }
 
 .leafTopLeftAccent {
-  top: 3%;
-  left: 10%;
-  width: clamp(4.5rem, 8vmax, 10rem);
-  transform: rotate(148deg);
+  top: -4%;
+  left: 26%;
+  width: clamp(4.5rem, 7.5vmax, 9rem);
+  transform-origin: 8% 92%;
+  transform: rotate(176deg);
 }
 
 .leafTopRight {
-  top: -7%;
-  right: -5%;
-  width: clamp(9rem, 15vmax, 19rem);
-  transform: rotate(-72deg) scaleY(-1);
-}
-
-.leafTopRightAccent {
-  top: 13%;
-  right: 7%;
-  width: clamp(4rem, 7vmax, 9rem);
-  transform: rotate(-28deg);
-}
-
-/* --- reef and beach ----------------------------------------------------- */
-
-.coralLeft {
-  bottom: 6%;
-  left: 1.5%;
-  width: clamp(4.5rem, 7.5vmax, 9.5rem);
-}
-
-.coralLeftFan {
-  bottom: 3%;
-  left: 9%;
-  width: clamp(3.5rem, 5.5vmax, 7rem);
-}
-
-.coralRight {
-  bottom: 2%;
-  left: 24%;
-  width: clamp(3rem, 5.5vw, 5.5rem);
-  transform: rotate(9deg);
-}
-
-.leafBottomRight {
-  bottom: 6%;
+  top: -8%;
   right: 1%;
-  width: clamp(6.5rem, 11vmax, 14rem);
-  transform: rotate(24deg);
+  width: clamp(9rem, 15vmax, 20rem);
+  transform-origin: 5% 50%;
+  transform: rotate(122deg);
 }
 
-.leafBottomRightAccent {
-  bottom: 1%;
-  right: 15%;
-  width: clamp(4rem, 6.5vmax, 8rem);
-  transform: rotate(-16deg) scaleX(-1);
+/* --- reef --------------------------------------------------------------- */
+
+.coralTeal {
+  bottom: -4%;
+  left: -2%;
+  width: clamp(6.5rem, 12vmax, 15rem);
+}
+
+.coralRed {
+  bottom: -1%;
+  left: 7%;
+  width: clamp(4.5rem, 8vmax, 10rem);
+}
+
+.coralFan {
+  bottom: -3%;
+  left: 13%;
+  width: clamp(5rem, 9vmax, 11rem);
+}
+
+/* --- foreground --------------------------------------------------------- */
+
+.featherRight {
+  right: -3%;
+  bottom: -18%;
+  width: clamp(7rem, 13vmax, 16rem);
+  transform: rotate(38deg) scaleX(-1);
 }
 
 /* --- motion ------------------------------------------------------------- */
@@ -144,20 +182,25 @@
 
 /* --- density per breakpoint --------------------------------------------- */
 
-/* Tablets: the accent fronds start colliding with the headline. */
 @media (max-width: 64rem) {
   .tracesTopLeft {
     left: 12%;
     opacity: 0.8;
+  }
+
+  .palmTreeFar {
+    display: none;
   }
 }
 
 /* Phones: keep only the pieces that frame the corners. */
 @media (max-width: 40rem) {
   .leafTopLeftAccent,
-  .leafTopRightAccent,
-  .coralRight,
-  .leafBottomRightAccent,
+  .leafTopLeftMid,
+  .coralFan,
+  .coralRed,
+  .featherRight,
+  .palmTreeFar,
   .tracesRight {
     display: none;
   }
@@ -169,24 +212,30 @@
     opacity: 0.18;
   }
 
-  .coralLeft {
-    width: 5.25rem;
-  }
-
-  .coralLeftFan {
-    width: 4rem;
-  }
-
-  .leafBottomRight {
-    width: 7.5rem;
-  }
-
   .leafTopLeft {
-    width: 11rem;
+    top: -4%;
+    width: 13rem;
   }
 
   .leafTopRight {
-    width: 12rem;
+    top: -4%;
+    right: 2%;
+    width: 13rem;
+  }
+
+  .coralTeal {
+    width: 6rem;
+  }
+
+  .palmTreeNear {
+    right: 3%;
+    bottom: 8.5vh;
+    width: 4.25rem;
+  }
+
+  .rock {
+    left: 42%;
+    width: 3rem;
   }
 }
 
@@ -198,25 +247,33 @@
   }
 
   .sand {
-    height: 5rem;
-    width: 11rem;
+    height: 6rem;
+    width: 12rem;
   }
 
-  .leafTopLeft,
+  .leafTopLeft {
+    top: -6%;
+    width: 7.5rem;
+  }
+
   .leafTopRight {
-    width: 8rem;
+    top: -14%;
+    right: -2%;
+    width: 7rem;
   }
 
   .leafTopLeftAccent,
-  .leafTopRightAccent,
-  .coralLeftFan,
-  .coralRight,
-  .leafBottomRightAccent {
+  .leafTopLeftMid,
+  .coralFan,
+  .coralRed,
+  .featherRight,
+  .palmTreeFar,
+  .palmTreeNear,
+  .rock {
     display: none;
   }
 
-  .coralLeft,
-  .leafBottomRight {
+  .coralTeal {
     width: 4.5rem;
   }
 }
