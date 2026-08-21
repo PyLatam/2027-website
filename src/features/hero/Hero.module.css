@@ -1,0 +1,185 @@
+.hero {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 100svh;
+  padding-block: clamp(3rem, 10vh, 6.5rem) clamp(5rem, 15vh, 9rem);
+  padding-inline: var(--gutter);
+  overflow: hidden;
+  background:
+    radial-gradient(125% 95% at 50% 0%, var(--c-foam-100) 0%, transparent 60%),
+    var(--color-bg);
+}
+
+.inner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, auto) minmax(0, auto);
+  align-items: center;
+  justify-content: center;
+  gap: clamp(1.25rem, 4vw, 4.5rem);
+  width: 100%;
+  max-width: var(--content-max);
+}
+
+.emblem {
+  width: clamp(8rem, 19vw + 4.5vh, 24rem);
+  height: auto;
+  filter: drop-shadow(0 10px 26px rgb(18 59 73 / 0.12));
+  animation: rise 900ms var(--ease-out) both;
+}
+
+.copy {
+  display: grid;
+  gap: clamp(0.1rem, 0.55vw, 0.45rem);
+  text-align: start;
+  text-wrap: balance;
+}
+
+.eyebrow {
+  font-family: var(--font-script);
+  font-size: var(--step-script);
+  font-weight: 400;
+  line-height: 1.1;
+  color: var(--color-brand);
+  margin-inline-start: 0.12em;
+}
+
+.lead,
+.city {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 800;
+  line-height: 0.94;
+  letter-spacing: -0.015em;
+  color: var(--color-accent);
+}
+
+/*
+ * Display sizes blend `vw` and `vh` so the headline fills tall portrait
+ * screens as convincingly as it fills wide desktops, instead of shrinking to a
+ * label with a dead band beneath it.
+ */
+.lead {
+  font-size: clamp(2.5rem, 4.4vw + 1.7vh, 5.8rem);
+}
+
+.city {
+  font-size: clamp(3.4rem, 6.2vw + 2.4vh, 8rem);
+}
+
+.country {
+  font-family: var(--font-script);
+  font-size: var(--step-script);
+  font-weight: 400;
+  line-height: 1.15;
+  color: var(--color-brand);
+  margin-block-start: 0.15em;
+  margin-inline-start: 0.12em;
+}
+
+/* --- entrance ----------------------------------------------------------- */
+
+.reveal {
+  animation: rise var(--duration-slow) var(--ease-out) both;
+}
+
+.eyebrow {
+  animation-delay: 80ms;
+}
+
+.lead {
+  animation-delay: 180ms;
+}
+
+.city {
+  animation-delay: 280ms;
+}
+
+.country {
+  animation-delay: 380ms;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    translate: 0 1.25rem;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+/* --- stacked layout ----------------------------------------------------- */
+
+@media (max-width: 52rem) {
+  /*
+   * Stacked layout: the headline is anchored just above the surf instead of
+   * centred in the whole screen, which is what keeps tall phones and portrait
+   * tablets from opening a dead band between the type and the water.
+   */
+  .hero {
+    align-items: end;
+    padding-block: clamp(2rem, 7vh, 4rem) clamp(6.5rem, 24vh, 13rem);
+  }
+
+  .inner {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+    gap: clamp(0.75rem, 3.5vw, 1.75rem);
+  }
+
+  .copy {
+    text-align: center;
+    justify-items: center;
+  }
+
+  .emblem {
+    width: clamp(8.5rem, 40vw, 16rem);
+  }
+
+  .lead {
+    font-size: clamp(2.1rem, 11.5vw, 3.8rem);
+  }
+
+  .city {
+    font-size: clamp(2.75rem, 15vw, 5rem);
+  }
+
+  .eyebrow,
+  .country {
+    font-size: clamp(1.05rem, 5vw, 1.75rem);
+  }
+
+  .eyebrow,
+  .country {
+    margin-inline: 0;
+  }
+}
+
+/* Very short viewports (landscape phones): the emblem shrinks first. */
+@media (max-height: 34rem) {
+  .hero {
+    align-items: center;
+    padding-block: 1.5rem 4.5rem;
+  }
+
+  .emblem {
+    width: clamp(5rem, 14vw, 9rem);
+  }
+
+  .lead {
+    font-size: clamp(1.9rem, 5vw, 3rem);
+  }
+
+  .city {
+    font-size: clamp(2.4rem, 6.6vw, 4rem);
+  }
+
+  .eyebrow,
+  .country {
+    font-size: clamp(0.95rem, 2.2vw, 1.4rem);
+  }
+}

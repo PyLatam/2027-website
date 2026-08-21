@@ -1,0 +1,97 @@
+/**
+ * Design tokens — the single source of truth for the visual language.
+ *
+ * The palette is sampled from the official 2027 key art (`assets/pcw.jpeg`):
+ * Caribbean ocean blues, coral pink, Python yellow and beach sand over paper white.
+ *
+ * Rules:
+ *  - Components never hardcode a color, radius or duration. They read a token.
+ *  - Raw palette values (`--c-*`) are the ramp; semantic roles (`--color-*`)
+ *    are what components consume, so the ramp can be retuned in one place.
+ */
+
+:root {
+  color-scheme: light;
+
+  /* ---------------------------------------------------------------- palette */
+  --c-paper: #fbfdfd;
+  --c-foam-100: #f0fafc;
+  --c-foam-200: #dff2f8;
+  --c-foam-300: #c4e8f2;
+
+  --c-ocean-200: #a8ddee;
+  --c-ocean-300: #7bcbe4;
+  --c-ocean-400: #4fbedb;
+  --c-ocean-500: #2ba7c9;
+  --c-ocean-600: #1e88a8;
+  --c-ocean-700: #17697f;
+
+  --c-aqua-300: #7fd9cf;
+  --c-aqua-500: #3fbfb4;
+  --c-aqua-600: #2ba296;
+
+  --c-coral-300: #ff9aa8;
+  --c-coral-500: #f94b63;
+  --c-coral-600: #e6314c;
+
+  --c-sun-300: #ffd875;
+  --c-sun-400: #f9c33c;
+  --c-sun-500: #f2ac16;
+
+  --c-sand-200: #fbeed6;
+  --c-sand-300: #f5e0bb;
+
+  --c-ink-700: #1e5d70;
+  --c-ink-900: #123b49;
+
+  /* ------------------------------------------------------------- semantics */
+  --color-bg: var(--c-paper);
+  --color-bg-sky: var(--c-foam-100);
+  --color-surface: #ffffff;
+  --color-text: var(--c-ink-900);
+  --color-text-muted: var(--c-ink-700);
+  --color-accent: var(--c-coral-500);
+  --color-accent-strong: var(--c-coral-600);
+  --color-brand: var(--c-ocean-500);
+  --color-brand-strong: var(--c-ocean-600);
+  --color-highlight: var(--c-sun-400);
+  --color-border: var(--c-foam-300);
+  --color-focus: var(--c-ocean-600);
+
+  /* ---------------------------------------------------------- typography */
+  --font-display: 'Kanit', 'Segoe UI', system-ui, sans-serif;
+  --font-script: 'Kaushan Script', 'Segoe Script', cursive;
+  --font-ui: 'Outfit', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  /* Fluid scale: min at 360px viewport, max at 1440px. */
+  --step-xs: clamp(0.75rem, 0.69rem + 0.28vw, 0.9rem);
+  --step-sm: clamp(0.875rem, 0.8rem + 0.33vw, 1.05rem);
+  --step-md: clamp(1.5rem, 0.95rem + 2.45vw, 3rem);
+  --step-lg: clamp(2.75rem, 1.2rem + 6.9vw, 7rem);
+  --step-script: clamp(1.15rem, 1.8vw + 0.9vh, 3rem);
+
+  /* --------------------------------------------------------------- space */
+  --space-2xs: 0.25rem;
+  --space-xs: 0.5rem;
+  --space-sm: 0.75rem;
+  --space-md: 1.25rem;
+  --space-lg: 2rem;
+  --space-xl: 3rem;
+  --space-2xl: clamp(3rem, 6vw, 6rem);
+
+  /* --------------------------------------------------------- decoration */
+  --radius-sm: 0.5rem;
+  --radius-md: 0.875rem;
+  --radius-pill: 999px;
+
+  --shadow-sm: 0 1px 2px rgb(18 59 73 / 0.06), 0 2px 8px rgb(18 59 73 / 0.05);
+  --shadow-md: 0 6px 24px rgb(18 59 73 / 0.1);
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-fast: 160ms;
+  --duration-slow: 640ms;
+
+  /* Layout */
+  --content-max: 78rem;
+  --gutter: clamp(1.25rem, 4vw, 4rem);
+}

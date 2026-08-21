@@ -1,0 +1,222 @@
+/*
+ * Purely decorative layer. Never receives pointer events or focus.
+ *
+ * Every piece is sized with `clamp()` against the viewport so the composition
+ * keeps the same proportions from a 320px phone to an ultrawide display, and
+ * the crowded pieces drop out at the breakpoints where they stop reading.
+ */
+
+.layer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.item {
+  position: absolute;
+  height: auto;
+  will-change: transform;
+}
+
+.shoreline {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  width: 100%;
+  height: clamp(6.5rem, 23vh, 17rem);
+}
+
+.sand {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: clamp(11rem, 30vw, 30rem);
+  height: clamp(7rem, 24vh, 17rem);
+}
+
+.traces {
+  position: absolute;
+  height: auto;
+  color: var(--c-ocean-300);
+  opacity: 0.26;
+}
+
+.tracesTopLeft {
+  top: 3%;
+  left: 20%;
+  width: clamp(11rem, 24vw, 26rem);
+}
+
+.tracesRight {
+  top: 36%;
+  right: -6%;
+  width: clamp(12rem, 22vw, 22rem);
+  transform: scaleX(-1);
+}
+
+/* --- canopy ------------------------------------------------------------- */
+
+.leafTopLeft {
+  top: -5%;
+  left: -4%;
+  width: clamp(8rem, 14vmax, 17rem);
+  transform: rotate(196deg);
+}
+
+.leafTopLeftAccent {
+  top: 3%;
+  left: 10%;
+  width: clamp(4.5rem, 8vmax, 10rem);
+  transform: rotate(148deg);
+}
+
+.leafTopRight {
+  top: -7%;
+  right: -5%;
+  width: clamp(9rem, 15vmax, 19rem);
+  transform: rotate(-72deg) scaleY(-1);
+}
+
+.leafTopRightAccent {
+  top: 13%;
+  right: 7%;
+  width: clamp(4rem, 7vmax, 9rem);
+  transform: rotate(-28deg);
+}
+
+/* --- reef and beach ----------------------------------------------------- */
+
+.coralLeft {
+  bottom: 6%;
+  left: 1.5%;
+  width: clamp(4.5rem, 7.5vmax, 9.5rem);
+}
+
+.coralLeftFan {
+  bottom: 3%;
+  left: 9%;
+  width: clamp(3.5rem, 5.5vmax, 7rem);
+}
+
+.coralRight {
+  bottom: 2%;
+  left: 24%;
+  width: clamp(3rem, 5.5vw, 5.5rem);
+  transform: rotate(9deg);
+}
+
+.leafBottomRight {
+  bottom: 6%;
+  right: 1%;
+  width: clamp(6.5rem, 11vmax, 14rem);
+  transform: rotate(24deg);
+}
+
+.leafBottomRightAccent {
+  bottom: 1%;
+  right: 15%;
+  width: clamp(4rem, 6.5vmax, 8rem);
+  transform: rotate(-16deg) scaleX(-1);
+}
+
+/* --- motion ------------------------------------------------------------- */
+
+.float {
+  animation: sway 9s var(--ease-out) infinite alternate;
+}
+
+.floatSlow {
+  animation: sway 13s var(--ease-out) infinite alternate-reverse;
+}
+
+@keyframes sway {
+  from {
+    translate: 0 0;
+    rotate: -1.1deg;
+  }
+  to {
+    translate: 0 -0.7rem;
+    rotate: 1.1deg;
+  }
+}
+
+/* --- density per breakpoint --------------------------------------------- */
+
+/* Tablets: the accent fronds start colliding with the headline. */
+@media (max-width: 64rem) {
+  .tracesTopLeft {
+    left: 12%;
+    opacity: 0.8;
+  }
+}
+
+/* Phones: keep only the pieces that frame the corners. */
+@media (max-width: 40rem) {
+  .leafTopLeftAccent,
+  .leafTopRightAccent,
+  .coralRight,
+  .leafBottomRightAccent,
+  .tracesRight {
+    display: none;
+  }
+
+  .tracesTopLeft {
+    top: 7%;
+    left: 6%;
+    width: 56vw;
+    opacity: 0.18;
+  }
+
+  .coralLeft {
+    width: 5.25rem;
+  }
+
+  .coralLeftFan {
+    width: 4rem;
+  }
+
+  .leafBottomRight {
+    width: 7.5rem;
+  }
+
+  .leafTopLeft {
+    width: 11rem;
+  }
+
+  .leafTopRight {
+    width: 12rem;
+  }
+}
+
+/* Landscape phones and other very short viewports: shrink the frame so the
+   headline keeps the stage. */
+@media (max-height: 34rem) {
+  .shoreline {
+    height: 5.5rem;
+  }
+
+  .sand {
+    height: 5rem;
+    width: 11rem;
+  }
+
+  .leafTopLeft,
+  .leafTopRight {
+    width: 8rem;
+  }
+
+  .leafTopLeftAccent,
+  .leafTopRightAccent,
+  .coralLeftFan,
+  .coralRight,
+  .leafBottomRightAccent {
+    display: none;
+  }
+
+  .coralLeft,
+  .leafBottomRight {
+    width: 4.5rem;
+  }
+}
