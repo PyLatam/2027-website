@@ -94,7 +94,7 @@ src/
 ├── features/
 │   └── hero/       # The one feature this site currently has
 ├── i18n/           # Locale detection, dictionary, provider, hook
-├── lib/svg/        # Pure geometry generators — no React, no DOM
+├── lib/            # Framework-free helpers (`cx`) and `svg/` generators
 ├── styles/         # tokens.css (design system) + global.css (reset)
 └── types/          # Cross-cutting types
 ```
@@ -209,7 +209,8 @@ on Google Fonts. The site uses the closest free stand-ins for the two roles the
 key art puts it in. If the licence is ever bought, swap the two families in
 `tokens.css` and nothing else changes.
 
-- `--font-script` (Yellowtail) — "PyCon Latam 2027", "República Dominicana"
+- `--font-script` (Yellowtail) — "PyCon Latam 2027", "República Dominicana",
+  and the dates line, which is one step smaller via `--script-size`
 - `--font-display` (Courgette) — "Nos vemos en", "Punta Cana,"
 - `--font-ui` (Outfit) — everything else
 

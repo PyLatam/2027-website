@@ -1,3 +1,4 @@
+import { cx } from '@/lib/cx';
 import { LOCALES, LOCALE_LABELS, type Locale } from '@/i18n/locales';
 import { useTranslation } from '@/i18n/useTranslation';
 import type { MessageKey } from '@/i18n/dictionary';
@@ -22,7 +23,7 @@ export function LanguageSwitcher({ className }: LanguageSwitcherProps) {
 
   return (
     <div
-      className={className ? `${styles.switcher} ${className}` : styles.switcher}
+      className={cx(styles.switcher, className)}
       role="group"
       aria-label={t('lang.legend')}
     >

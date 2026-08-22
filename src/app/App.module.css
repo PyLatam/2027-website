@@ -1,7 +1,21 @@
+/*
+ * A column, not a stack of overlays: the hero takes every pixel the footer does
+ * not, so the sea always ends exactly where the footer begins instead of being
+ * covered by it.
+ */
 .shell {
   position: relative;
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
   min-height: 100svh;
+}
+
+.main {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
 }
 
 .toolbar {

@@ -29,25 +29,29 @@ const BANDS = [
 ] as const;
 
 /**
- * A shallower version for stacked layouts. Compressing the desktop geometry
- * into a phone makes its tall first crest look like a pointed mountain; these
- * planes retain the same rhythm with wider, gentler changes in elevation.
+ * The same rhythm rebuilt for stacked layouts.
+ *
+ * Compressing the desktop geometry into a phone makes its tall first crest look
+ * like a pointed mountain, but flattening it into stripes is the opposite
+ * failure: at 390px the water stops reading as water. These planes trade the
+ * single steep peak for two long, rolling swells, and keep every trough clear
+ * of the bottom edge so no sliver of page shows beneath the front band.
  */
 const COMPACT_BANDS = [
   {
-    d: 'M0 132 C220 130 380 114 560 100 C720 88 880 104 1040 122 C1200 140 1320 120 1440 106 V280 H0 Z',
+    d: 'M0 118 C200 94 340 72 520 90 C700 108 830 156 1010 150 C1180 144 1320 110 1440 90 V280 H0 Z',
     fill: 'var(--c-foam-200)',
   },
   {
-    d: 'M0 170 C240 168 420 150 600 136 C760 124 920 142 1080 160 C1220 176 1340 158 1440 144 V280 H0 Z',
+    d: 'M0 162 C190 140 350 120 540 138 C720 154 850 198 1030 194 C1200 190 1330 158 1440 138 V280 H0 Z',
     fill: 'var(--c-foam-300)',
   },
   {
-    d: 'M0 208 C260 206 450 188 640 174 C800 162 960 180 1120 198 C1260 212 1360 196 1440 182 V280 H0 Z',
+    d: 'M0 204 C180 186 360 166 560 184 C740 200 870 234 1050 232 C1210 230 1340 204 1440 186 V280 H0 Z',
     fill: 'var(--c-ocean-200)',
   },
   {
-    d: 'M0 242 C280 240 480 224 680 212 C840 202 1000 218 1160 234 C1290 246 1380 232 1440 220 V280 H0 Z',
+    d: 'M0 244 C170 230 370 212 580 226 C760 238 890 256 1070 256 C1220 256 1350 238 1440 226 V280 H0 Z',
     fill: 'var(--c-ocean-300)',
   },
 ] as const;

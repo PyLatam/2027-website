@@ -1,13 +1,15 @@
+/*
+ * A strip of beach along the bottom edge, in normal flow. It used to float over
+ * the hero, which cut the surf and the reef in half; sitting under the scene
+ * lets the water run to its own edge and reads as the sand the viewer stands on.
+ */
 .footer {
-  position: absolute;
+  position: relative;
   z-index: 2;
-  inset-inline: 0;
-  bottom: 0;
+  flex: 0 0 auto;
   padding: clamp(0.5rem, 1.2vh, 0.75rem) clamp(1rem, 4vw, 3rem);
-  background: color-mix(in srgb, var(--color-surface) 75%, transparent);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-top: 1px solid color-mix(in srgb, var(--c-ocean-300) 30%, transparent);
+  background: var(--c-sand-100);
+  border-top: 1px solid color-mix(in srgb, var(--c-sand-300) 55%, transparent);
   font-family: var(--font-ui);
 }
 
@@ -63,7 +65,7 @@
 
 .socialLink:hover {
   color: var(--color-accent);
-  background-color: color-mix(in srgb, var(--c-foam-200) 70%, transparent);
+  background-color: color-mix(in srgb, var(--c-sand-200) 75%, transparent);
   transform: translateY(-1px);
 }
 

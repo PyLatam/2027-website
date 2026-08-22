@@ -1,4 +1,5 @@
 import { EVENT } from '@/content/event';
+import { cx } from '@/lib/cx';
 import { useTranslation } from '@/i18n/useTranslation';
 
 import { IconFacebook, IconInstagram, IconLinkedIn, IconX } from './SocialIcons';
@@ -35,7 +36,7 @@ export function Footer({ className }: FooterProps) {
   ];
 
   return (
-    <footer className={`${styles.footer}${className ? ` ${className}` : ''}`}>
+    <footer className={cx(styles.footer, className)}>
       <div className={styles.inner}>
         <span className={styles.copyright}>
           &copy; {EVENT.year} {EVENT.name}. {t('footer.rights')}

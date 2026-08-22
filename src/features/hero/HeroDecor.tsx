@@ -7,6 +7,8 @@ import {
   Shoreline,
 } from '@/components/decor';
 
+import { cx } from '@/lib/cx';
+
 import styles from './HeroDecor.module.css';
 
 /**
@@ -22,10 +24,10 @@ export function HeroDecor() {
   return (
     <div className={styles.layer} aria-hidden="true">
       {/* --- background texture --- */}
-      <CircuitTraces className={`${styles.traces} ${styles.tracesLeft}`} />
-      <CircuitTraces className={`${styles.traces} ${styles.tracesLowerLeft}`} />
-      <CircuitTraces className={`${styles.traces} ${styles.tracesTopLeft}`} />
-      <CircuitTraces className={`${styles.traces} ${styles.tracesRight}`} />
+      <CircuitTraces className={cx(styles.traces, styles.tracesLeft)} />
+      <CircuitTraces className={cx(styles.traces, styles.tracesLowerLeft)} />
+      <CircuitTraces className={cx(styles.traces, styles.tracesTopLeft)} />
+      <CircuitTraces className={cx(styles.traces, styles.tracesRight)} />
 
       {/*
         Canopy: fronds hanging from the top edge, all pointing down and clearly
@@ -35,27 +37,27 @@ export function HeroDecor() {
       <BrandShape
         name="leaf-frond-02"
         color="var(--c-aqua-500)"
-        className={`${styles.item} ${styles.leafTopLeft} ${styles.float}`}
+        className={cx(styles.item, styles.leafTopLeft, styles.float)}
       />
       <BrandShape
         name="leaf-frond-02"
         color="var(--c-ocean-500)"
-        className={`${styles.item} ${styles.leafTopLeftMid} ${styles.floatSlow}`}
+        className={cx(styles.item, styles.leafTopLeftMid, styles.floatSlow)}
       />
       <BrandShape
         name="leaf-frond-01"
         color="var(--c-tangerine-500)"
-        className={`${styles.item} ${styles.leafTopLeftAccent} ${styles.float}`}
+        className={cx(styles.item, styles.leafTopLeftAccent, styles.float)}
       />
       <BrandShape
         name="leaf-frond-02"
         color="var(--c-aqua-500)"
-        className={`${styles.item} ${styles.leafTopRight} ${styles.floatSlow}`}
+        className={cx(styles.item, styles.leafTopRight, styles.floatSlow)}
       />
       <BrandShape
         name="leaf-frond-01"
         color="var(--c-tangerine-500)"
-        className={`${styles.item} ${styles.leafTopRightAccent} ${styles.float}`}
+        className={cx(styles.item, styles.leafTopRightAccent, styles.float)}
       />
 
       {/* --- water and beach (the jungle is drawn inside SandCove) --- */}
@@ -63,40 +65,40 @@ export function HeroDecor() {
       <PalmTree
         trunkColor="var(--c-aqua-600)"
         crownColor="var(--c-aqua-600)"
-        className={`${styles.item} ${styles.palmTreeFar} ${styles.floatSlow}`}
+        className={cx(styles.item, styles.palmTreeFar, styles.floatSlow)}
       />
       <PalmTree
         trunkColor="var(--c-ocean-400)"
         crownColor="var(--c-ocean-400)"
         fronds={8}
         flip
-        className={`${styles.item} ${styles.palmTreeNear} ${styles.float}`}
+        className={cx(styles.item, styles.palmTreeNear, styles.float)}
       />
       <SandCove className={styles.sand} />
-      <SeaRock className={`${styles.item} ${styles.rock}`} />
+      <SeaRock className={cx(styles.item, styles.rock)} />
 
       {/* --- reef, in front of the water --- */}
       <BrandShape
         name="coral-staghorn"
         color="var(--c-aqua-500)"
-        className={`${styles.item} ${styles.coralTeal}`}
+        className={cx(styles.item, styles.coralTeal)}
       />
       <BrandShape
         name="coral-branch"
         color="var(--c-coral-500)"
-        className={`${styles.item} ${styles.coralRed}`}
+        className={cx(styles.item, styles.coralRed)}
       />
       <BrandShape
         name="coral-fan"
         color="var(--c-aqua-600)"
-        className={`${styles.item} ${styles.coralFan}`}
+        className={cx(styles.item, styles.coralFan)}
       />
 
       {/* --- foreground: one leaf, entering from the corner --- */}
       <BrandShape
         name="leaf-frond-01"
         color="var(--c-coral-500)"
-        className={`${styles.item} ${styles.featherRight} ${styles.floatSlow}`}
+        className={cx(styles.item, styles.featherRight, styles.floatSlow)}
       />
     </div>
   );

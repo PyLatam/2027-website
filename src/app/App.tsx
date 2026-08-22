@@ -14,7 +14,7 @@ export function App() {
         {t('skip.toContent')}
       </a>
       <LanguageSwitcher className={styles.toolbar} />
-      <main>
+      <main className={styles.main}>
         <Hero />
       </main>
       <Footer />

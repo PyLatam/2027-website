@@ -1,34 +1,58 @@
 /**
  * Design tokens — the single source of truth for the visual language.
  *
- * The palette is sampled from the official 2027 key art (`assets/pcw.jpeg`):
- * Caribbean ocean blues, coral pink, Python yellow and beach sand over paper white.
+ * ============================================================================
+ * THE PALETTE AT A GLANCE
+ * ============================================================================
  *
- * Rules:
- *  - Components never hardcode a color, radius or duration. They read a token.
- *  - Raw palette values (`--c-*`) are the ramp; semantic roles (`--color-*`)
- *    are what components consume, so the ramp can be retuned in one place.
+ *   BRAND — the five colours of the official mark. Nothing else is "the brand".
+ *
+ *     #31add0  ocean blue    the snake, the three script lines, every link
+ *     #fec822  sun yellow    the mark's second coil and the sunlit sand
+ *     #48bab7  aqua teal     palms, canopy fronds, the reef
+ *     #ea5363  coral pink    the headline and the red corals
+ *     #ee8827  orange        the accent fronds in the canopy
+ *
+ *   SUPPORTING — hues the key art needs that the mark does not carry.
+ *
+ *     sand          the beach and the footer strip
+ *     jungle        the canopy blobs behind the palms
+ *     foam          near-white washes: page ground, the far water planes
+ *     ink           the only text colours, both drawn from the ocean hue
+ *
+ *   Each hue below is a ramp from light to dark. `500` is always the brand
+ *   colour itself, so a ramp can be retuned without the mark drifting.
+ *
+ * ============================================================================
+ * HOW TO USE THEM
+ * ============================================================================
+ *
+ *   - Components read tokens. A literal colour, font or duration in a
+ *     component is a bug, not a shortcut.
+ *   - Prefer a `--color-*` role over a raw `--c-*` step: roles say what the
+ *     colour is for, so the ramp can move underneath them. Reach for a raw
+ *     step only for artwork, where the hue itself is the point.
+ *   - Adding a colour means adding it to a ramp here, never inline.
  */
 
 :root {
   color-scheme: light;
 
-  /* ---------------------------------------------------------------- palette
-   * The five brand colours are taken verbatim from the official mark
-   * (`src/assets/pycon-latam-rd-mark.svg`). Every ramp below is built around
-   * them, so nothing on the page can drift away from the logo.
-   */
+  /* ==================================================================== */
+  /* 1. BRAND — verbatim from `src/assets/pycon-latam-rd-mark.svg`.        */
+  /* ==================================================================== */
+
   --c-brand-blue: #31add0;
   --c-brand-yellow: #fec822;
   --c-brand-teal: #48bab7;
   --c-brand-coral: #ea5363;
   --c-brand-orange: #ee8827;
 
-  --c-paper: #fbfdfd;
-  --c-foam-100: #f2fafd;
-  --c-foam-200: #e2f3f9;
-  --c-foam-300: #c9e9f3;
+  /* ==================================================================== */
+  /* 2. RAMPS — light → dark, with `500` anchored on the brand colour.     */
+  /* ==================================================================== */
 
+  /* Ocean blue — water, script type, links. */
   --c-ocean-100: #ddf1f8;
   --c-ocean-200: #b7e3f0;
   --c-ocean-300: #86d0e5;
@@ -37,59 +61,82 @@
   --c-ocean-600: #2790ae;
   --c-ocean-700: #1f7189;
 
+  /* Aqua teal — palms, canopy fronds, the reef. */
   --c-aqua-300: #8ad8d3;
   --c-aqua-400: #66c9c5;
   --c-aqua-500: var(--c-brand-teal);
   --c-aqua-600: #369a97;
   --c-aqua-700: #2a7d7a;
 
+  /* Coral pink — the headline and the red corals. */
   --c-coral-300: #f59aa4;
   --c-coral-400: #f07683;
   --c-coral-500: var(--c-brand-coral);
   --c-coral-600: #d33c4d;
 
+  /* Sun yellow — the mark's second coil and the sunlit sand. */
   --c-sun-300: #ffe07a;
   --c-sun-400: var(--c-brand-yellow);
   --c-sun-500: #eeb00c;
 
+  /* Orange — the accent fronds. Two steps: it is a highlight, not a surface. */
   --c-tangerine-400: #f5a04a;
   --c-tangerine-500: var(--c-brand-orange);
 
+  /* Sand — the beach and the footer strip. */
   --c-sand-100: #fdf4e2;
   --c-sand-200: #f9e8ca;
   --c-sand-300: #f3d9a8;
   --c-sand-400: #f2c451;
 
+  /* Jungle — the canopy blobs behind the palms. */
   --c-jungle-400: #4fbab0;
   --c-jungle-500: #3aa39c;
   --c-jungle-600: #2e8f86;
 
+  /* Foam — near-white washes: page ground and the far water planes. */
+  --c-paper: #fbfdfd;
+  --c-foam-100: #f2fafd;
+  --c-foam-200: #e2f3f9;
+  --c-foam-300: #c9e9f3;
+
+  /* Ink — the only text colours, both darkened from the ocean hue. */
   --c-ink-700: #1e5d70;
   --c-ink-900: #123b49;
 
-  /* ------------------------------------------------------------- semantics */
-  --color-bg: var(--c-paper);
-  --color-bg-sky: var(--c-foam-100);
-  --color-surface: #ffffff;
+  /* ==================================================================== */
+  /* 3. ROLES — what components actually read.                            */
+  /* ==================================================================== */
+
+  /* Surfaces */
+  --color-bg: var(--c-paper); /* the page ground */
+  --color-bg-sky: var(--c-foam-100); /* the wash behind the headline */
+  --color-surface: #ffffff; /* raised panels: the language switcher */
+  --color-border: var(--c-foam-300);
+
+  /* Type */
   --color-text: var(--c-ink-900);
   --color-text-muted: var(--c-ink-700);
-  --color-accent: var(--c-coral-500);
+
+  /* Emphasis */
+  --color-accent: var(--c-coral-500); /* the headline */
   --color-accent-strong: var(--c-coral-600);
-  --color-brand: var(--c-ocean-500);
-  --color-brand-strong: var(--c-ocean-600);
-  --color-highlight: var(--c-sun-400);
-  --color-border: var(--c-foam-300);
+  --color-brand: var(--c-ocean-500); /* script lines, the active locale */
+  --color-brand-strong: var(--c-ocean-600); /* links and icons */
   --color-focus: var(--c-ocean-600);
 
-  /* ---------------------------------------------------------- typography */
+  /* ==================================================================== */
+  /* 4. TYPOGRAPHY                                                        */
+  /* ==================================================================== */
+
   /*
    * The brand font is Freehand 521 BT (Bitstream), which is commercial and not
    * on Google Fonts. These are the closest free stand-ins for the two roles the
    * key art uses it in. If the licence is ever bought, swap the two families
    * here and nothing else changes.
    */
-  --font-display: 'Courgette', 'Segoe Script', cursive;
-  --font-script: 'Yellowtail', 'Segoe Script', cursive;
+  --font-display: 'Courgette', 'Segoe Script', cursive; /* the two big lines */
+  --font-script: 'Yellowtail', 'Segoe Script', cursive; /* the three small lines */
   --font-ui: 'Outfit', system-ui, -apple-system, 'Segoe UI', sans-serif;
 
   /* Courgette is lighter than the key art's display weight; a hairline stroke
@@ -101,9 +148,14 @@
   --step-sm: clamp(0.875rem, 0.8rem + 0.33vw, 1.05rem);
   --step-md: clamp(1.5rem, 0.95rem + 2.45vw, 3rem);
   --step-lg: clamp(2.75rem, 1.2rem + 6.9vw, 7rem);
+  /* The script lines blend `vw` and `vh` so they hold their share of the
+     poster on tall phones as well as on wide desktops. */
   --step-script: clamp(1.15rem, 1.8vw + 0.9vh, 3rem);
 
-  /* --------------------------------------------------------------- space */
+  /* ==================================================================== */
+  /* 5. SPACE                                                             */
+  /* ==================================================================== */
+
   --space-2xs: 0.25rem;
   --space-xs: 0.5rem;
   --space-sm: 0.75rem;
@@ -112,7 +164,10 @@
   --space-xl: 3rem;
   --space-2xl: clamp(3rem, 6vw, 6rem);
 
-  /* --------------------------------------------------------- decoration */
+  /* ==================================================================== */
+  /* 6. DECORATION                                                        */
+  /* ==================================================================== */
+
   --radius-sm: 0.5rem;
   --radius-md: 0.875rem;
   --radius-pill: 999px;
@@ -120,14 +175,21 @@
   --shadow-sm: 0 1px 2px rgb(18 59 73 / 0.06), 0 2px 8px rgb(18 59 73 / 0.05);
   --shadow-md: 0 6px 24px rgb(18 59 73 / 0.1);
 
+  /* ==================================================================== */
+  /* 7. MOTION                                                            */
+  /* ==================================================================== */
+
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --duration-fast: 160ms;
   --duration-slow: 640ms;
-  --duration-tide-cycle: 9s;
-  --duration-surf-wash: 6.5s;
-  --duration-rock-bob: 7s;
+  --duration-tide-cycle: 9s; /* the water planes */
+  --duration-surf-wash: 6.5s; /* the surf running up the sand */
+  --duration-rock-bob: 7s; /* the rock in the shallows */
 
-  /* Layout */
+  /* ==================================================================== */
+  /* 8. LAYOUT                                                            */
+  /* ==================================================================== */
+
   --content-max: 78rem;
   --gutter: clamp(1.25rem, 4vw, 4rem);
 }

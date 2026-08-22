@@ -1,4 +1,5 @@
 import { BrandMark } from '@/components/decor';
+import { cx } from '@/lib/cx';
 import { useTranslation } from '@/i18n/useTranslation';
 
 import { HeroDecor } from './HeroDecor';
@@ -23,19 +24,19 @@ export function Hero() {
 
         <h1 className={styles.copy}>
           <span className="visually-hidden">{t('hero.aria')}</span>
-          <span className={`${styles.eyebrow} ${styles.reveal}`} aria-hidden="true">
+          <span className={cx(styles.eyebrow, styles.reveal)} aria-hidden="true">
             {t('hero.eyebrow')}
           </span>
-          <span className={`${styles.lead} ${styles.reveal}`} aria-hidden="true">
+          <span className={cx(styles.lead, styles.reveal)} aria-hidden="true">
             {t('hero.lead')}
           </span>
-          <span className={`${styles.city} ${styles.reveal}`} aria-hidden="true">
+          <span className={cx(styles.city, styles.reveal)} aria-hidden="true">
             {t('hero.city')}
           </span>
-          <span className={`${styles.country} ${styles.reveal}`} aria-hidden="true">
+          <span className={cx(styles.country, styles.reveal)} aria-hidden="true">
             {t('hero.country')}
           </span>
-          <span className={`${styles.dates} ${styles.reveal}`} aria-hidden="true">
+          <span className={cx(styles.dates, styles.reveal)} aria-hidden="true">
             {t('hero.dates')}
           </span>
         </h1>
