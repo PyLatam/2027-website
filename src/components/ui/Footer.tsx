@@ -37,12 +37,9 @@ export function Footer({ className }: FooterProps) {
   return (
     <footer className={`${styles.footer}${className ? ` ${className}` : ''}`}>
       <div className={styles.inner}>
-        <div className={styles.info}>
-          <span className={styles.copyright}>
-            &copy; {EVENT.year} {EVENT.name}. {t('footer.rights')}
-          </span>
-          <span className={styles.inclusion}>{t('footer.inclusion')}</span>
-        </div>
+        <span className={styles.copyright}>
+          &copy; {EVENT.year} {EVENT.name}. {t('footer.rights')}
+        </span>
 
         <ul className={styles.socialList} aria-label="Social media">
           {socialLinks.map(({ name, href, Icon }) => (

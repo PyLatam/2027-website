@@ -30,22 +30,10 @@
   }
 }
 
-.info {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
 .copyright {
   font-size: var(--step-xs);
   font-weight: 500;
   color: var(--color-text);
-  line-height: 1.3;
-}
-
-.inclusion {
-  font-size: clamp(0.7rem, 0.64rem + 0.2vw, 0.8rem);
-  color: var(--color-text-muted);
   line-height: 1.3;
 }
 
