@@ -27,6 +27,14 @@ const es = {
   'lang.short.en': 'EN',
 
   'skip.toContent': 'Saltar al contenido',
+
+  'footer.rights': 'Todos los derechos reservados.',
+  'footer.inclusion':
+    'Comprometidos con el respeto, la diversidad y la tolerancia mutua.',
+  'social.x': 'X (Twitter) de PyCon Latam',
+  'social.instagram': 'Instagram de PyCon Latam',
+  'social.linkedin': 'LinkedIn de PyCon Latam',
+  'social.facebook': 'Facebook de PyCon Latam',
 } as const;
 
 export type MessageKey = keyof typeof es;
@@ -53,6 +61,13 @@ const en: Messages = {
   'lang.short.en': 'EN',
 
   'skip.toContent': 'Skip to content',
+
+  'footer.rights': 'All rights reserved.',
+  'footer.inclusion': 'Committed to respect, diversity, and mutual tolerance.',
+  'social.x': 'PyCon Latam on X (Twitter)',
+  'social.instagram': 'PyCon Latam on Instagram',
+  'social.linkedin': 'PyCon Latam on LinkedIn',
+  'social.facebook': 'PyCon Latam on Facebook',
 };
 
 export const DICTIONARIES: Record<Locale, Messages> = { es, en };

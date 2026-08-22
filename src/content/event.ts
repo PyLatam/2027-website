@@ -31,6 +31,7 @@ export interface EventInfo {
     readonly x: string;
     readonly instagram: string;
     readonly linkedin: string;
+    readonly facebook: string;
   };
 }
 
@@ -55,5 +56,6 @@ export const EVENT: EventInfo = {
     x: 'https://x.com/pyconlatam',
     instagram: 'https://www.instagram.com/pyconlatam/',
     linkedin: 'https://www.linkedin.com/company/pycon-latam/',
+    facebook: 'https://www.facebook.com/PyLatam/',
   },
 } as const;

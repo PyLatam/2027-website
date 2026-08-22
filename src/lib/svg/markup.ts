@@ -36,7 +36,10 @@ export function namespaceSvgIds(markup: string, uid: string): string {
     const namespaced = `${id}-${uid}`;
     result = result.replace(new RegExp(`\\bid=["']${id}["']`, 'g'), `id="${namespaced}"`);
     result = result.replace(new RegExp(`url\\(#${id}\\)`, 'g'), `url(#${namespaced})`);
-    result = result.replace(new RegExp(`(href=["'])#${id}(["'])`, 'g'), `$1#${namespaced}$2`);
+    result = result.replace(
+      new RegExp(`(href=["'])#${id}(["'])`, 'g'),
+      `$1#${namespaced}$2`,
+    );
   }
 
   return result;

@@ -44,8 +44,10 @@ export function canopyBlobs({
     const baseY = y1 + dy * t;
     const offsetNormal = (rand() - 0.5) * 2 * scatter;
     const offsetTangent = (rand() - 0.5) * (len / Math.max(count, 1));
-    const cx = Math.round((baseX + nx * offsetNormal + (dx / len) * offsetTangent) * 10) / 10;
-    const cy = Math.round((baseY + ny * offsetNormal + (dy / len) * offsetTangent) * 10) / 10;
+    const cx =
+      Math.round((baseX + nx * offsetNormal + (dx / len) * offsetTangent) * 10) / 10;
+    const cy =
+      Math.round((baseY + ny * offsetNormal + (dy / len) * offsetTangent) * 10) / 10;
     const r = Math.round((minRadius + rand() * (maxRadius - minRadius)) * 10) / 10;
     blobs.push({ cx, cy, r });
   }

@@ -1,3 +1,4 @@
+import { Footer } from '@/components/ui/Footer';
 import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher';
 import { Hero } from '@/features/hero/Hero';
 import { useTranslation } from '@/i18n/useTranslation';
@@ -16,6 +17,7 @@ export function App() {
       <main>
         <Hero />
       </main>
+      <Footer />
     </div>
   );
 }
