@@ -123,6 +123,9 @@
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --duration-fast: 160ms;
   --duration-slow: 640ms;
+  --duration-tide-cycle: 9s;
+  --duration-surf-wash: 6.5s;
+  --duration-rock-bob: 7s;
 
   /* Layout */
   --content-max: 78rem;

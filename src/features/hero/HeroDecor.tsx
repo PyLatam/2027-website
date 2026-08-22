@@ -22,6 +22,8 @@ export function HeroDecor() {
   return (
     <div className={styles.layer} aria-hidden="true">
       {/* --- background texture --- */}
+      <CircuitTraces className={`${styles.traces} ${styles.tracesLeft}`} />
+      <CircuitTraces className={`${styles.traces} ${styles.tracesLowerLeft}`} />
       <CircuitTraces className={`${styles.traces} ${styles.tracesTopLeft}`} />
       <CircuitTraces className={`${styles.traces} ${styles.tracesRight}`} />
 
@@ -50,10 +52,14 @@ export function HeroDecor() {
         color="var(--c-aqua-500)"
         className={`${styles.item} ${styles.leafTopRight} ${styles.floatSlow}`}
       />
+      <BrandShape
+        name="leaf-frond-01"
+        color="var(--c-tangerine-500)"
+        className={`${styles.item} ${styles.leafTopRightAccent} ${styles.float}`}
+      />
 
       {/* --- water and beach (the jungle is drawn inside SandCove) --- */}
       <Shoreline className={styles.shoreline} />
-      <SandCove className={styles.sand} />
       <PalmTree
         trunkColor="var(--c-aqua-600)"
         crownColor="var(--c-aqua-600)"
@@ -66,6 +72,7 @@ export function HeroDecor() {
         flip
         className={`${styles.item} ${styles.palmTreeNear} ${styles.float}`}
       />
+      <SandCove className={styles.sand} />
       <SeaRock className={`${styles.item} ${styles.rock}`} />
 
       {/* --- reef, in front of the water --- */}

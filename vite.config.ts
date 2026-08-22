@@ -5,12 +5,13 @@ import react from '@vitejs/plugin-react';
 /**
  * `base` must point to the public path where the site is served from.
  *
- * - GitHub Pages project site (default): https://pylatam.github.io/2027-website/
- * - Custom domain (e.g. 2027.pylatam.org): set VITE_BASE_PATH="/"
+ * - Local development and manual builds use `/`.
+ * - GitHub Pages project sites set `/<repo>/` through the deploy workflow.
+ * - Custom domains keep `/` through that same workflow.
  *
  * The deploy workflow computes this value automatically.
  */
-const base = process.env.VITE_BASE_PATH ?? '/2027-website/';
+const base = process.env.VITE_BASE_PATH ?? '/';
 
 export default defineConfig({
   base,
