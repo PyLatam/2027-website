@@ -53,9 +53,9 @@ export const EVENT: EventInfo = {
   },
   canonicalUrl: 'https://pylatam.github.io/2027-website/',
   social: {
-    x: 'https://x.com/pyconlatam',
+    x: 'https://x.com/PyLatam',
     instagram: 'https://www.instagram.com/pyconlatam/',
-    linkedin: 'https://www.linkedin.com/company/pycon-latam/',
+    linkedin: 'https://www.linkedin.com/company/pylatam/',
     facebook: 'https://www.facebook.com/PyLatam/',
   },
 } as const;
