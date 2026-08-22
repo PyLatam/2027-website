@@ -42,7 +42,7 @@
     />
     <meta
       property="og:description"
-      content="Nos vemos en Punta Cana, República Dominicana."
+      content="Nos vemos en Punta Cana, República Dominicana. 26 – 29 de agosto, 2027."
     />
     <meta property="og:url" content="https://pylatam.github.io/2027-website/" />
     <meta
@@ -60,19 +60,19 @@
       href="https://fonts.googleapis.com/css2?family=Courgette&family=Outfit:wght@400;600&family=Yellowtail&display=swap"
     />
 
-    <!--
-      TODO(committee): once the official dates are announced, replace this with
-      an `Event` node (startDate/endDate/location) so the page becomes eligible
-      for event rich results.
-    -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@type": "WebSite",
+        "@type": "Event",
         "name": "PyCon Latam 2027",
+        "description": "PyCon Latam 2027 en Punta Cana, República Dominicana. 26 – 29 de agosto de 2027.",
+        "startDate": "2027-08-26",
+        "endDate": "2027-08-29",
+        "eventStatus": "https://schema.org/EventScheduled",
+        "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
         "url": "https://pylatam.github.io/2027-website/",
         "inLanguage": ["es", "en"],
-        "about": {
+        "location": {
           "@type": "Place",
           "name": "Punta Cana",
           "address": {
@@ -88,8 +88,12 @@
     <div id="root"></div>
     <noscript>
       <h1>PyCon Latam 2027</h1>
-      <p lang="es">Nos vemos en Punta Cana, República Dominicana.</p>
-      <p lang="en">See you in Punta Cana, Dominican Republic.</p>
+      <p lang="es">
+        Nos vemos en Punta Cana, República Dominicana del 26 al 29 de agosto de 2027.
+      </p>
+      <p lang="en">
+        See you in Punta Cana, Dominican Republic from August 26 to 29, 2027.
+      </p>
     </noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>

@@ -83,6 +83,27 @@
   margin-inline-start: 0.12em;
 }
 
+.dates {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: start;
+  margin-block-start: clamp(0.5rem, 1.2vh, 1rem);
+  margin-inline-start: 0.12em;
+  padding: clamp(0.35rem, 0.8vh, 0.5rem) clamp(0.85rem, 1.5vw, 1.25rem);
+  font-family: var(--font-ui);
+  font-size: var(--step-xs);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--color-brand-strong);
+  background: color-mix(in srgb, var(--color-surface) 85%, transparent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid color-mix(in srgb, var(--c-ocean-300) 40%, transparent);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-sm);
+}
+
 /* --- entrance ----------------------------------------------------------- */
 
 .reveal {
@@ -103,6 +124,10 @@
 
 .country {
   animation-delay: 380ms;
+}
+
+.dates {
+  animation-delay: 460ms;
 }
 
 @keyframes rise {
@@ -160,6 +185,12 @@
   .eyebrow,
   .country {
     margin-inline: 0;
+  }
+
+  .dates {
+    align-self: center;
+    margin-inline: 0;
+    font-size: clamp(0.8rem, 3.2vw, 0.95rem);
   }
 }
 

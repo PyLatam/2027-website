@@ -44,11 +44,8 @@ export const EVENT: EventInfo = {
     countryKey: 'venue.country',
   },
   dates: {
-    // TODO(committee): announce the official dates, then fill these in.
-    // Once set, the hero can surface them and JSON-LD becomes eligible for
-    // Google's event rich results.
-    start: null,
-    end: null,
+    start: '2027-08-26',
+    end: '2027-08-29',
     timeZone: 'America/Santo_Domingo',
   },
   canonicalUrl: 'https://pylatam.github.io/2027-website/',

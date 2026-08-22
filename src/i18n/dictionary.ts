@@ -9,13 +9,15 @@ import type { Locale } from './locales';
 const es = {
   'meta.title': 'PyCon Latam 2027 — Punta Cana, República Dominicana',
   'meta.description':
-    'PyCon Latam 2027 nos lleva a Punta Cana, República Dominicana. La conferencia de la comunidad Python de Latinoamérica.',
+    'PyCon Latam 2027 nos lleva a Punta Cana, República Dominicana del 26 al 29 de agosto de 2027. La conferencia de la comunidad Python de Latinoamérica.',
 
   'hero.eyebrow': 'PyCon Latam 2027',
   'hero.lead': 'Nos vemos en',
   'hero.city': 'Punta Cana,',
   'hero.country': 'República Dominicana',
-  'hero.aria': 'PyCon Latam 2027. Nos vemos en Punta Cana, República Dominicana.',
+  'hero.dates': '26 – 29 de agosto, 2027',
+  'hero.aria':
+    'PyCon Latam 2027. Nos vemos en Punta Cana, República Dominicana del 26 al 29 de agosto de 2027.',
 
   'venue.country': 'República Dominicana',
 
@@ -41,13 +43,15 @@ export type Messages = Record<MessageKey, string>;
 const en: Messages = {
   'meta.title': 'PyCon Latam 2027 — Punta Cana, Dominican Republic',
   'meta.description':
-    'PyCon Latam 2027 takes us to Punta Cana, Dominican Republic. The conference of the Latin American Python community.',
+    'PyCon Latam 2027 takes us to Punta Cana, Dominican Republic from August 26 to 29, 2027. The conference of the Latin American Python community.',
 
   'hero.eyebrow': 'PyCon Latam 2027',
   'hero.lead': 'See you in',
   'hero.city': 'Punta Cana,',
   'hero.country': 'Dominican Republic',
-  'hero.aria': 'PyCon Latam 2027. See you in Punta Cana, Dominican Republic.',
+  'hero.dates': 'August 26 – 29, 2027',
+  'hero.aria':
+    'PyCon Latam 2027. See you in Punta Cana, Dominican Republic from August 26 to 29, 2027.',
 
   'venue.country': 'Dominican Republic',
 

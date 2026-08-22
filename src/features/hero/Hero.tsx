@@ -35,6 +35,9 @@ export function Hero() {
           <span className={`${styles.country} ${styles.reveal}`} aria-hidden="true">
             {t('hero.country')}
           </span>
+          <span className={`${styles.dates} ${styles.reveal}`} aria-hidden="true">
+            {t('hero.dates')}
+          </span>
         </h1>
       </div>
     </section>
