@@ -48,7 +48,7 @@ export const EVENT: EventInfo = {
     end: '2027-08-29',
     timeZone: 'America/Santo_Domingo',
   },
-  canonicalUrl: 'https://pylatam.github.io/2027-website/',
+  canonicalUrl: 'https://2027.pylatam.org/',
   social: {
     x: 'https://x.com/PyLatam',
     instagram: 'https://www.instagram.com/pyconlatam/',
