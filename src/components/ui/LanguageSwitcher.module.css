@@ -11,6 +11,10 @@
 }
 
 .option {
+  display: grid;
+  place-items: center;
+  min-inline-size: 2.75rem;
+  min-block-size: 2.75rem;
   padding: 0.3rem clamp(0.6rem, 2vw, 0.85rem);
   font-size: var(--step-xs);
   font-weight: 600;

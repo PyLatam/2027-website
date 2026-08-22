@@ -31,35 +31,108 @@
   inset-inline: 0;
   bottom: 0;
   width: 100%;
-  height: clamp(6.5rem, 23vh, 17rem);
+  height: clamp(9.5rem, 30vh, 27rem);
+}
+
+.shoreline [data-compact-bands] {
+  display: none;
+}
+
+.shoreline path {
+  --wave-x: 0.9%;
+  --wave-y: -0.7%;
+  --wave-stretch: 1.026;
+
+  transform-box: fill-box;
+  transform-origin: center bottom;
+  animation: tidePulse var(--duration-tide-cycle) var(--ease-out) infinite;
+  will-change: transform;
+}
+
+.shoreline path:nth-child(1) {
+  --wave-x: 0.8%;
+  --wave-y: -0.55%;
+  --wave-stretch: 1.022;
+}
+
+.shoreline path:nth-child(2) {
+  --wave-x: 0.9%;
+  --wave-y: -0.7%;
+  --wave-stretch: 1.026;
+  animation-delay: var(--duration-fast);
+}
+
+.shoreline path:nth-child(3) {
+  --wave-x: 1.05%;
+  --wave-y: -0.85%;
+  --wave-stretch: 1.03;
+  animation-delay: calc(2 * var(--duration-fast));
+}
+
+.shoreline path:nth-child(4) {
+  --wave-x: 1.2%;
+  --wave-y: -1%;
+  --wave-stretch: 1.035;
+  animation-delay: calc(3 * var(--duration-fast));
 }
 
 .sand {
   position: absolute;
   right: 0;
   bottom: 0;
-  width: clamp(13rem, 38vw, 40rem);
-  height: clamp(8.5rem, 30vh, 22rem);
+  width: clamp(15rem, 38vw, 52rem);
+  height: auto;
+}
+
+.sand [data-surf] > path {
+  --wash-x: 2.2%;
+  --wash-y: 1.2%;
+  --wash-scale: 0.975;
+
+  transform-box: fill-box;
+  transform-origin: right center;
+  animation: surfWash var(--duration-surf-wash) var(--ease-out) infinite;
+  will-change: transform, opacity;
+}
+
+.sand [data-surf] > path:nth-child(2) {
+  --wash-x: 2.8%;
+  --wash-y: 1.7%;
+  --wash-scale: 0.97;
+  animation-delay: var(--duration-fast);
+}
+
+.sand [data-surf] > path:nth-child(3) {
+  --wash-x: 3.4%;
+  --wash-y: 2.2%;
+  --wash-scale: 0.965;
+  animation-delay: calc(2 * var(--duration-fast));
+}
+
+.sand [data-waterline] {
+  animation: waterlineWash var(--duration-surf-wash) var(--ease-out) infinite;
 }
 
 .rock {
-  bottom: clamp(2rem, 7vh, 5rem);
-  left: 53%;
-  width: clamp(3rem, 6vmax, 7.5rem);
+  bottom: clamp(-1.25rem, -1.5vh, -0.25rem);
+  left: 57.5%;
+  width: clamp(6rem, 13.5vw, 12rem);
+  transform-origin: 50% 88%;
+  animation: rockBob var(--duration-rock-bob) var(--ease-out) infinite alternate;
 }
 
 /* --- jungle ------------------------------------------------------------- */
 
 .palmTreeFar {
-  right: 15%;
-  bottom: clamp(3.5rem, 11.5vh, 8.5rem);
+  right: 5%;
+  bottom: clamp(7rem, 25vh, 17rem);
   width: clamp(4rem, 7vmax, 9rem);
 }
 
 .palmTreeNear {
-  right: 6%;
-  bottom: clamp(5rem, 17vh, 12.5rem);
-  width: clamp(5rem, 8.5vmax, 11rem);
+  right: -1%;
+  bottom: clamp(7.5rem, 25vh, 18rem);
+  width: clamp(7rem, 12vmax, 16rem);
 }
 
 /* --- background texture ------------------------------------------------- */
@@ -75,6 +148,20 @@
   top: 3%;
   left: 20%;
   width: clamp(11rem, 24vw, 26rem);
+}
+
+.tracesLeft {
+  top: 22%;
+  left: -4%;
+  width: clamp(11rem, 20vw, 21rem);
+}
+
+.tracesLowerLeft {
+  top: 49%;
+  left: 11%;
+  width: clamp(9rem, 16vw, 17rem);
+  opacity: 0.2;
+  transform: rotate(180deg);
 }
 
 .tracesRight {
@@ -180,6 +267,78 @@
   }
 }
 
+@keyframes tidePulse {
+  0%,
+  52%,
+  100% {
+    transform: translate3d(calc(-1 * var(--wave-x)), 0, 0) scaleX(1.04) scaleY(1)
+      skewX(0deg);
+  }
+
+  12% {
+    transform: translate3d(calc(-0.35 * var(--wave-x)), var(--wave-y), 0) scaleX(1.045)
+      scaleY(var(--wave-stretch)) skewX(-0.4deg);
+  }
+
+  26% {
+    transform: translate3d(calc(0.35 * var(--wave-x)), calc(-0.3 * var(--wave-y)), 0)
+      scaleX(1.042) scaleY(calc(2 - var(--wave-stretch))) skewX(0.35deg);
+  }
+
+  40% {
+    transform: translate3d(var(--wave-x), calc(0.15 * var(--wave-y)), 0) scaleX(1.04)
+      scaleY(1.006) skewX(0deg);
+  }
+}
+
+@keyframes surfWash {
+  0%,
+  100% {
+    opacity: 0.68;
+    transform: translate3d(calc(-1 * var(--wash-x)), calc(-0.5 * var(--wash-y)), 0)
+      scaleX(1.035);
+  }
+
+  42%,
+  58% {
+    opacity: 1;
+    transform: translate3d(var(--wash-x), var(--wash-y), 0) scaleX(var(--wash-scale));
+  }
+}
+
+@keyframes waterlineWash {
+  0%,
+  100% {
+    opacity: 0.76;
+    stroke-width: 7;
+  }
+
+  42%,
+  58% {
+    opacity: 1;
+    stroke-width: 10;
+  }
+}
+
+@keyframes rockBob {
+  from {
+    transform: translateY(0) rotate(-0.35deg);
+  }
+  to {
+    transform: translateY(-0.35rem) rotate(0.35deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shoreline path,
+  .sand [data-surf] > path,
+  .sand [data-waterline],
+  .rock {
+    animation: none;
+    transform: none;
+  }
+}
+
 /* --- density per breakpoint --------------------------------------------- */
 
 @media (max-width: 64rem) {
@@ -193,8 +352,41 @@
   }
 }
 
+@media (max-width: 52rem) {
+  .tracesLeft,
+  .tracesLowerLeft {
+    display: none;
+  }
+
+  .shoreline {
+    height: clamp(8.5rem, 26vh, 18rem);
+  }
+
+  .shoreline [data-wide-bands] {
+    display: none;
+  }
+
+  .shoreline [data-compact-bands] {
+    display: inline;
+  }
+
+  .sand {
+    width: clamp(20rem, 58vw, 30rem);
+  }
+
+  .palmTreeNear {
+    right: 1%;
+    bottom: clamp(7rem, 14vh, 9rem);
+    width: clamp(5rem, 9vmax, 8rem);
+  }
+}
+
 /* Phones: keep only the pieces that frame the corners. */
 @media (max-width: 40rem) {
+  .shoreline {
+    height: clamp(8rem, 24vh, 14rem);
+  }
+
   .leafTopLeftAccent,
   .leafTopLeftMid,
   .coralFan,
@@ -233,9 +425,14 @@
     width: 4.25rem;
   }
 
+  .sand {
+    width: clamp(17rem, 74vw, 19rem);
+  }
+
   .rock {
+    bottom: 1.25rem;
     left: 42%;
-    width: 3rem;
+    width: 3.25rem;
   }
 }
 
@@ -247,8 +444,8 @@
   }
 
   .sand {
-    height: 6rem;
     width: 12rem;
+    height: auto;
   }
 
   .leafTopLeft {
@@ -275,5 +472,19 @@
 
   .coralTeal {
     width: 4.5rem;
+  }
+}
+
+/* Keep the upper frame clear of the emblem on short portrait phones. */
+@media (orientation: portrait) and (max-width: 40rem) and (max-height: 42rem) {
+  .leafTopLeft {
+    top: -6%;
+    width: clamp(7.5rem, 24vh, 9.5rem);
+  }
+
+  .leafTopRight {
+    top: -8%;
+    right: 0;
+    width: clamp(7rem, 22vh, 9rem);
   }
 }

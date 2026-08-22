@@ -2,6 +2,7 @@
   position: relative;
   display: grid;
   place-items: center;
+  min-height: 100vh;
   min-height: 100svh;
   padding-block: clamp(3rem, 10vh, 6.5rem) clamp(5rem, 15vh, 9rem);
   padding-inline: var(--gutter);
@@ -166,7 +167,7 @@
 @media (max-height: 34rem) {
   .hero {
     align-items: center;
-    padding-block: 1.5rem 4.5rem;
+    padding-block: 1rem 3rem;
   }
 
   .emblem {
@@ -184,5 +185,36 @@
   .eyebrow,
   .country {
     font-size: clamp(0.95rem, 2.2vw, 1.4rem);
+  }
+}
+
+/* Short portrait phones need a smooth scale between the compact and stacked
+   layouts. Using viewport height here avoids a jump at the landscape-phone
+   breakpoint while keeping the copy clear of both the canopy and the surf. */
+@media (orientation: portrait) and (max-width: 40rem) and (max-height: 42rem) {
+  .hero {
+    align-items: end;
+    padding-block: clamp(1.25rem, 5vh, 2rem) clamp(8rem, 34vh, 13rem);
+  }
+
+  .inner {
+    gap: clamp(0.5rem, 2.5vh, 0.9rem);
+  }
+
+  .emblem {
+    width: clamp(5rem, min(40vw, calc(30vh - 4rem)), 8.5rem);
+  }
+
+  .lead {
+    font-size: clamp(1.9rem, min(11.5vw, calc(4.4vh + 0.6rem)), 2.7rem);
+  }
+
+  .city {
+    font-size: clamp(2.4rem, min(15vw, calc(6vh + 0.6rem)), 3.5rem);
+  }
+
+  .eyebrow,
+  .country {
+    font-size: clamp(0.95rem, min(5vw, calc(2.2vh + 0.3rem)), 1.2rem);
   }
 }
