@@ -52,6 +52,11 @@ export function HeroDecor() {
         color="var(--c-aqua-500)"
         className={`${styles.item} ${styles.leafTopRight} ${styles.floatSlow}`}
       />
+      <BrandShape
+        name="leaf-frond-01"
+        color="var(--c-tangerine-500)"
+        className={`${styles.item} ${styles.leafTopRightAccent} ${styles.float}`}
+      />
 
       {/* --- water and beach (the jungle is drawn inside SandCove) --- */}
       <Shoreline className={styles.shoreline} />

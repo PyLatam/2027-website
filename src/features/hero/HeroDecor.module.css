@@ -217,6 +217,14 @@
   transform: rotate(122deg);
 }
 
+.leafTopRightAccent {
+  top: -5%;
+  right: -4%;
+  width: clamp(6rem, 9vmax, 11rem);
+  transform-origin: 8% 92%;
+  transform: rotate(176deg);
+}
+
 /* --- reef --------------------------------------------------------------- */
 
 .coralTeal {
@@ -347,8 +355,12 @@
     opacity: 0.8;
   }
 
-  .palmTreeFar {
+  .shoreline [data-wide-bands] {
     display: none;
+  }
+
+  .shoreline [data-compact-bands] {
+    display: inline;
   }
 }
 
@@ -362,21 +374,19 @@
     height: clamp(8.5rem, 26vh, 18rem);
   }
 
-  .shoreline [data-wide-bands] {
-    display: none;
-  }
-
-  .shoreline [data-compact-bands] {
-    display: inline;
-  }
-
   .sand {
     width: clamp(20rem, 58vw, 30rem);
   }
 
+  .palmTreeFar {
+    right: 10%;
+    bottom: clamp(8rem, 15vh, 10rem);
+    width: clamp(3.25rem, 6vmax, 4rem);
+  }
+
   .palmTreeNear {
     right: 1%;
-    bottom: clamp(7rem, 14vh, 9rem);
+    bottom: clamp(7.5rem, 14vh, 9rem);
     width: clamp(5rem, 9vmax, 8rem);
   }
 }
@@ -388,11 +398,9 @@
   }
 
   .leafTopLeftAccent,
+  .leafTopRightAccent,
   .leafTopLeftMid,
-  .coralFan,
-  .coralRed,
   .featherRight,
-  .palmTreeFar,
   .tracesRight {
     display: none;
   }
@@ -416,13 +424,32 @@
   }
 
   .coralTeal {
-    width: 6rem;
+    left: -3%;
+    width: 5.5rem;
+  }
+
+  .coralRed {
+    left: 9%;
+    bottom: -2%;
+    width: 3.75rem;
+  }
+
+  .coralFan {
+    left: 21%;
+    bottom: -3%;
+    width: 4rem;
+  }
+
+  .palmTreeFar {
+    right: 11%;
+    bottom: 5.75rem;
+    width: 3rem;
   }
 
   .palmTreeNear {
-    right: 3%;
-    bottom: 8.5vh;
-    width: 4.25rem;
+    right: 0;
+    bottom: 5.5rem;
+    width: 3.75rem;
   }
 
   .sand {
@@ -430,9 +457,9 @@
   }
 
   .rock {
-    bottom: 1.25rem;
+    bottom: 0.35rem;
     left: 42%;
-    width: 3.25rem;
+    width: 2.6rem;
   }
 }
 
@@ -461,17 +488,35 @@
 
   .leafTopLeftAccent,
   .leafTopLeftMid,
-  .coralFan,
-  .coralRed,
   .featherRight,
-  .palmTreeFar,
-  .palmTreeNear,
   .rock {
     display: none;
   }
 
   .coralTeal {
     width: 4.5rem;
+  }
+
+  .coralRed {
+    left: 8%;
+    width: 3rem;
+  }
+
+  .coralFan {
+    left: 16%;
+    width: 3.25rem;
+  }
+
+  .palmTreeFar {
+    right: 16%;
+    bottom: 3.5rem;
+    width: 2.5rem;
+  }
+
+  .palmTreeNear {
+    right: 3%;
+    bottom: 3.75rem;
+    width: 3rem;
   }
 }
 
