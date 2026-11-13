@@ -61,8 +61,8 @@ once the Django site reaches parity and takes over production.
   - The footer and social icons are ported in `footer.css`. The icon SVGs in
     `templates/icons/` have the same path data as `SocialIcons.tsx`, checked
     by script. URLs come from `core.content`.
-  - The skip link targets `#content`, as in React. Until Phase 3 the id sits
-    on `<main>`; it then moves to the hero `<section>`, where React has it.
+  - The skip link targets `#content`, as in React. The id sat on `<main>`
+    until Phase 3 moved it to the hero `<section>`.
   - Django-only key: `footer.social` ("Redes sociales" / "Social media") for
     the social list's `aria-label`, which React hardcodes in English.
   - Verified with Playwright at 390, 768, 1440 and 1920 wide, in both
@@ -71,9 +71,64 @@ once the Django site reaches parity and takes over production.
   - **Hosting note:** the cookie and `Accept-Language` steps need a server. A
     static export would serve the default (Spanish) unless the visitor uses
     `?lang=`. Factor this into the pending hosting decision.
-- **Phase 3 — next.** Scene: hero type, `BrandMark`/`BrandShape`, and the
-  `src/lib/svg/` generators with the same PRNG, as a full Python port (see
-  the decision log). Known pitfalls for identical output:
+- **Phase 3 — done.** Scene: hero type, every decor component and the SVG
+  generators, as a full Python port. The page now renders the whole scene
+  server-side, without JavaScript.
+  - `core/svg/` ports `src/lib/svg/`: `prng.py` (Mulberry32), `ribbon.py`,
+    `canopy.py`, `markup.py`, plus `numbers.py`, the single place JS number
+    rules live: `js_str` (`String(n)`), `js_fixed2`
+    (`Number(n.toFixed(2)).toString()`), `js_round` (`Math.round`) and
+    `js_hypot` (V8's `Math.hypot`).
+  - `core/decor/` ports `components/decor/` as pure functions that return
+    the markup `react-dom/server` produces (same attribute order, closing
+    tags, `data-*="true"`). `core/assets/` holds byte-identical copies of
+    `src/assets/` (logo and the eight catalogue shapes). The tags in
+    `core/templatetags/decor.py` hand each instance a uid (`svg1`, `svg2`, …)
+    that plays `useId`'s role; it restarts on every render, so the page is
+    stable across requests.
+  - The hero is `landing/templates/landing/hero.html` and `hero_decor.html`.
+    `id="content"` moved from `<main>` to the hero `<section>`.
+    `hero.css`/`hero-decor.css` follow the prefix rule: `.hero` and `.layer`
+    become `.hero` and `.hero-decor`, every other class and keyframe becomes
+    `hero-*`/`hero-decor-*`.
+  - No new dictionary keys: the hero uses the existing `hero.*` and
+    `logo.alt`. The hardcoded durations in the CSS (`9s`, `13s`, `900ms`) and
+    the hero's `drop-shadow` colour come verbatim from the React modules.
+  - Python takes only `class_name` (and `color` on `brand_shape`), not
+    React's `style` prop: nothing in the scene passes one.
+  - **Golden files.** `web/golden/generate.mjs` loads the real TS/TSX through
+    Vite's SSR loader and writes `web/golden/*.json`: JS number formatting
+    (856 values, incl. `toFixed` ties and `-0`), 807 `Math.hypot` results,
+    PRNG sequences for 14 seeds (negative, fractional, ≥ 2³²), 54
+    `ribbonPath` spines (every spine in the scene, edge cases, 40 random),
+    6 `canopyBlobs` calls, 35 rendered components (every catalogue shape,
+    every prop the scene uses, the full `HeroDecor` and `Hero` in both
+    languages), asset hashes, and the hero CSS Modules compiled with the
+    Django class names. Regenerate with `node web/golden/generate.mjs` (from
+    the repo root, in WSL, nvm loaded). It only reads `legacy-react/`.
+  - **Tests** (`core/test_scene.py`): everything above compared exactly;
+    component markup byte for byte with uids normalised; `Hero`/`HeroDecor`
+    after also dropping whitespace between tags (template indentation); every
+    id on the page unique and every `url(#…)`/`href="#…"` resolving; each
+    instance getting its own ids; the ported CSS equal to the compiled modules
+    once comments and whitespace are dropped; every decor item with its own
+    `width`.
+  - **Finding:** V8's `Math.hypot` differs from Python's `math.hypot` in the
+    last bit for about a third of inputs. It changes no rounded digit in the
+    current scene, but `js_hypot` ports V8's algorithm and is tested bit for
+    bit, so a future spine cannot drift.
+  - Verified with Playwright against the React preview at 390×844, 768×1024,
+    1440×900, 1920×1080, 320×568, 1280×800, 2560×1440 and 844×390, with
+    animations frozen: the hero, emblem, each headline line and every decor
+    piece have identical bounding boxes; zero horizontal overflow; the gap
+    from the dates line to the top of the surf is identical (the surf starts
+    above the dates line at every size except 320×568 and 2560×1440, where
+    the gap is 34 and 39 px, equal on both sites). Pixel diff ≤ 0.06%, all in
+    the footer copyright line (antialiasing) and one palm pixel.
+  - **Dev note:** after adding a module under `templatetags/`, restart
+    `runserver`; its autoreloader does not register new tag libraries.
+
+  Porting pitfalls, kept for reference (all handled and tested):
   - `Math.round` rounds halves towards +∞; Python's `round` rounds half to
     even. Port the JS rule.
   - `Number(n.toFixed(2)).toString()` (`ribbon.ts`) rounds exact ties up
@@ -93,8 +148,8 @@ once the Django site reaches parity and takes over production.
     internals and are not reproduced. Tests compare markup with ids
     normalised, and separately check that every id is unique and every
     `url(#…)`/`href="#…"` reference resolves.
-  - When the hero lands, move `id="content"` from `<main>` to the hero
-    `<section>`, as in React.
+- **Phase 4 — next.** Visual parity: pixel diff at every listed width,
+  in both languages.
 
 ## Decision log
 

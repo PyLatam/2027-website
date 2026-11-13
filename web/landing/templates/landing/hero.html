@@ -1,0 +1,28 @@
+{% load site_i18n decor %}
+{% comment %}
+  Ported from legacy-react/src/features/hero/Hero.tsx. Styles: static/css/hero.css.
+
+  The whole announcement, in one screen. The typographic lines are a single
+  <h1>: assistive technology reads one sentence (hero.aria) while sighted
+  visitors get the poster's four-beat rhythm. Adding lines means adding keys to
+  core/dictionary.py, never literals.
+
+  `id="content"` is the skip link's target, as in React.
+{% endcomment %}
+<section class="hero" id="content">
+  {% include "landing/hero_decor.html" %}
+
+  <div class="hero-inner">
+    {% t "logo.alt" as logo_alt %}
+    {% brand_mark title=logo_alt class_name="hero-emblem" %}
+
+    <h1 class="hero-copy">
+      <span class="visually-hidden">{% t "hero.aria" %}</span>
+      <span class="hero-eyebrow hero-reveal" aria-hidden="true">{% t "hero.eyebrow" %}</span>
+      <span class="hero-lead hero-reveal" aria-hidden="true">{% t "hero.lead" %}</span>
+      <span class="hero-city hero-reveal" aria-hidden="true">{% t "hero.city" %}</span>
+      <span class="hero-country hero-reveal" aria-hidden="true">{% t "hero.country" %}</span>
+      <span class="hero-dates hero-reveal" aria-hidden="true">{% t "hero.dates" %}</span>
+    </h1>
+  </div>
+</section>

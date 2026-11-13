@@ -1,0 +1,545 @@
+/*
+ * Hero scene placement. Ported from
+ * legacy-react/src/features/hero/HeroDecor.module.css; the root class `.layer`
+ * becomes `.hero-decor`, the rest (keyframes included) become `hero-decor-*`.
+ *
+ * Generated from the compiled CSS Module by web/golden/generate.mjs and checked
+ * against it by `core.test_scene`: edit both sites, then regenerate.
+ */
+
+/*
+ * Placement for the decorative layer.
+ *
+ * Sizes use `clamp()` against `vmax` so the frame keeps its proportions from a
+ * 320px phone to an ultrawide display — `vw` alone collapses the corners on
+ * tall portrait screens. Crowded pieces drop out at the breakpoints where they
+ * stop reading rather than being shrunk into noise.
+ */
+
+.hero-decor {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hero-decor-item {
+  position: absolute;
+  /* Fallback size: a piece that forgets its own `width` degrades to a small
+     shape instead of stretching across the whole hero. */
+  width: 6rem;
+  height: auto;
+  will-change: transform;
+}
+
+/* --- water and beach ---------------------------------------------------- */
+
+.hero-decor-shoreline {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  width: 100%;
+  height: clamp(9.5rem, 30vh, 27rem);
+}
+
+.hero-decor-shoreline [data-compact-bands] {
+  display: none;
+}
+
+.hero-decor-shoreline path {
+  --wave-x: 0.9%;
+  --wave-y: -0.7%;
+  --wave-stretch: 1.026;
+
+  transform-box: fill-box;
+  transform-origin: center bottom;
+  animation: hero-decor-tide-pulse var(--duration-tide-cycle) var(--ease-out) infinite;
+  will-change: transform;
+}
+
+.hero-decor-shoreline path:nth-child(1) {
+  --wave-x: 0.8%;
+  --wave-y: -0.55%;
+  --wave-stretch: 1.022;
+}
+
+.hero-decor-shoreline path:nth-child(2) {
+  --wave-x: 0.9%;
+  --wave-y: -0.7%;
+  --wave-stretch: 1.026;
+  animation-delay: var(--duration-fast);
+}
+
+.hero-decor-shoreline path:nth-child(3) {
+  --wave-x: 1.05%;
+  --wave-y: -0.85%;
+  --wave-stretch: 1.03;
+  animation-delay: calc(2 * var(--duration-fast));
+}
+
+.hero-decor-shoreline path:nth-child(4) {
+  --wave-x: 1.2%;
+  --wave-y: -1%;
+  --wave-stretch: 1.035;
+  animation-delay: calc(3 * var(--duration-fast));
+}
+
+.hero-decor-sand {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: clamp(15rem, 38vw, 52rem);
+  height: auto;
+}
+
+.hero-decor-sand [data-surf] > path {
+  --wash-x: 2.2%;
+  --wash-y: 1.2%;
+  --wash-scale: 0.975;
+
+  transform-box: fill-box;
+  transform-origin: right center;
+  animation: hero-decor-surf-wash var(--duration-surf-wash) var(--ease-out) infinite;
+  will-change: transform, opacity;
+}
+
+.hero-decor-sand [data-surf] > path:nth-child(2) {
+  --wash-x: 2.8%;
+  --wash-y: 1.7%;
+  --wash-scale: 0.97;
+  animation-delay: var(--duration-fast);
+}
+
+.hero-decor-sand [data-surf] > path:nth-child(3) {
+  --wash-x: 3.4%;
+  --wash-y: 2.2%;
+  --wash-scale: 0.965;
+  animation-delay: calc(2 * var(--duration-fast));
+}
+
+.hero-decor-sand [data-waterline] {
+  animation: hero-decor-waterline-wash var(--duration-surf-wash) var(--ease-out) infinite;
+}
+
+.hero-decor-rock {
+  bottom: clamp(-1.25rem, -1.5vh, -0.25rem);
+  left: 57.5%;
+  width: clamp(6rem, 13.5vw, 12rem);
+  transform-origin: 50% 88%;
+  animation: hero-decor-rock-bob var(--duration-rock-bob) var(--ease-out) infinite alternate;
+}
+
+/* --- jungle ------------------------------------------------------------- */
+
+.hero-decor-palm-tree-far {
+  right: 5%;
+  bottom: clamp(7rem, 25vh, 17rem);
+  width: clamp(4rem, 7vmax, 9rem);
+}
+
+.hero-decor-palm-tree-near {
+  right: -1%;
+  bottom: clamp(7.5rem, 25vh, 18rem);
+  width: clamp(7rem, 12vmax, 16rem);
+}
+
+/* --- background texture ------------------------------------------------- */
+
+.hero-decor-traces {
+  position: absolute;
+  height: auto;
+  color: var(--c-ocean-300);
+  opacity: 0.26;
+}
+
+.hero-decor-traces-top-left {
+  top: 3%;
+  left: 20%;
+  width: clamp(11rem, 24vw, 26rem);
+}
+
+.hero-decor-traces-left {
+  top: 22%;
+  left: -4%;
+  width: clamp(11rem, 20vw, 21rem);
+}
+
+.hero-decor-traces-lower-left {
+  top: 49%;
+  left: 11%;
+  width: clamp(9rem, 16vw, 17rem);
+  opacity: 0.2;
+  transform: rotate(180deg);
+}
+
+.hero-decor-traces-right {
+  top: 36%;
+  right: -6%;
+  width: clamp(12rem, 22vw, 22rem);
+  transform: scaleX(-1);
+}
+
+/* --- canopy -------------------------------------------------------------
+ * Every frond hangs from the top edge with its stem off canvas.
+ *
+ * **Nothing here may reach the headline.** The copy column is centred and at
+ * most `--content-max` wide, so on a 1440px viewport it ends around 16% from
+ * the right edge — a frond drifting into that band sits behind the type and
+ * muddies it, even though the text paints on top.
+ *
+ * `transform-origin` is the stem's base, not the box centre: rotating about the
+ * centre swings a large frond right out of the viewport, which is exactly the
+ * bug this replaced. `leaf-frond-02` rests pointing right (base at its left
+ * edge); `leaf-frond-01` rests pointing up-right (base at its bottom-left).
+ */
+
+.hero-decor-leaf-top-left {
+  top: -6%;
+  left: 0%;
+  width: clamp(10rem, 17vmax, 22rem);
+  transform-origin: 5% 50%;
+  transform: rotate(64deg);
+}
+
+.hero-decor-leaf-top-left-mid {
+  top: -8%;
+  left: 15%;
+  width: clamp(7rem, 12vmax, 15rem);
+  transform-origin: 5% 50%;
+  transform: rotate(96deg);
+}
+
+.hero-decor-leaf-top-left-accent {
+  top: -4%;
+  left: 26%;
+  width: clamp(4.5rem, 7.5vmax, 9rem);
+  transform-origin: 8% 92%;
+  transform: rotate(176deg);
+}
+
+.hero-decor-leaf-top-right {
+  top: -8%;
+  right: 1%;
+  width: clamp(9rem, 15vmax, 20rem);
+  transform-origin: 5% 50%;
+  transform: rotate(122deg);
+}
+
+.hero-decor-leaf-top-right-accent {
+  top: -5%;
+  right: -4%;
+  width: clamp(6rem, 9vmax, 11rem);
+  transform-origin: 8% 92%;
+  transform: rotate(176deg);
+}
+
+/* --- reef --------------------------------------------------------------- */
+
+.hero-decor-coral-teal {
+  bottom: 0;
+  left: -2%;
+  width: clamp(6.5rem, 12vmax, 15rem);
+}
+
+.hero-decor-coral-red {
+  bottom: 0;
+  left: 7%;
+  width: clamp(4.5rem, 8vmax, 10rem);
+}
+
+.hero-decor-coral-fan {
+  bottom: 0;
+  left: 13%;
+  width: clamp(5rem, 9vmax, 11rem);
+}
+
+/* --- foreground --------------------------------------------------------- */
+
+.hero-decor-feather-right {
+  right: -3%;
+  bottom: -18%;
+  width: clamp(7rem, 13vmax, 16rem);
+  transform: rotate(38deg) scaleX(-1);
+}
+
+/* --- motion ------------------------------------------------------------- */
+
+.hero-decor-float {
+  animation: hero-decor-sway 9s var(--ease-out) infinite alternate;
+}
+
+.hero-decor-float-slow {
+  animation: hero-decor-sway 13s var(--ease-out) infinite alternate-reverse;
+}
+
+@keyframes hero-decor-sway {
+  from {
+    translate: 0 0;
+    rotate: -1.1deg;
+  }
+  to {
+    translate: 0 -0.7rem;
+    rotate: 1.1deg;
+  }
+}
+
+@keyframes hero-decor-tide-pulse {
+  0%,
+  52%,
+  100% {
+    transform: translate3d(calc(-1 * var(--wave-x)), 0, 0) scaleX(1.04) scaleY(1)
+      skewX(0deg);
+  }
+
+  12% {
+    transform: translate3d(calc(-0.35 * var(--wave-x)), var(--wave-y), 0) scaleX(1.045)
+      scaleY(var(--wave-stretch)) skewX(-0.4deg);
+  }
+
+  26% {
+    transform: translate3d(calc(0.35 * var(--wave-x)), calc(-0.3 * var(--wave-y)), 0)
+      scaleX(1.042) scaleY(calc(2 - var(--wave-stretch))) skewX(0.35deg);
+  }
+
+  40% {
+    transform: translate3d(var(--wave-x), calc(0.15 * var(--wave-y)), 0) scaleX(1.04)
+      scaleY(1.006) skewX(0deg);
+  }
+}
+
+@keyframes hero-decor-surf-wash {
+  0%,
+  100% {
+    opacity: 0.68;
+    transform: translate3d(calc(-1 * var(--wash-x)), calc(-0.5 * var(--wash-y)), 0)
+      scaleX(1.035);
+  }
+
+  42%,
+  58% {
+    opacity: 1;
+    transform: translate3d(var(--wash-x), var(--wash-y), 0) scaleX(var(--wash-scale));
+  }
+}
+
+@keyframes hero-decor-waterline-wash {
+  0%,
+  100% {
+    opacity: 0.76;
+    stroke-width: 7;
+  }
+
+  42%,
+  58% {
+    opacity: 1;
+    stroke-width: 10;
+  }
+}
+
+@keyframes hero-decor-rock-bob {
+  from {
+    transform: translateY(0) rotate(-0.35deg);
+  }
+  to {
+    transform: translateY(-0.35rem) rotate(0.35deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-decor-shoreline path,
+  .hero-decor-sand [data-surf] > path,
+  .hero-decor-sand [data-waterline],
+  .hero-decor-rock {
+    animation: none;
+    transform: none;
+  }
+}
+
+/* --- density per breakpoint --------------------------------------------- */
+
+@media (max-width: 64rem) {
+  .hero-decor-traces-top-left {
+    left: 12%;
+    opacity: 0.8;
+  }
+
+  .hero-decor-shoreline [data-wide-bands] {
+    display: none;
+  }
+
+  .hero-decor-shoreline [data-compact-bands] {
+    display: inline;
+  }
+}
+
+@media (max-width: 52rem) {
+  .hero-decor-traces-left,
+  .hero-decor-traces-lower-left {
+    display: none;
+  }
+
+  .hero-decor-shoreline {
+    height: clamp(8.5rem, 26vh, 18rem);
+  }
+
+  .hero-decor-sand {
+    width: clamp(20rem, 58vw, 30rem);
+  }
+
+  .hero-decor-palm-tree-far {
+    right: 10%;
+    bottom: clamp(8rem, 15vh, 10rem);
+    width: clamp(3.25rem, 6vmax, 4rem);
+  }
+
+  .hero-decor-palm-tree-near {
+    right: 1%;
+    bottom: clamp(7.5rem, 14vh, 9rem);
+    width: clamp(5rem, 9vmax, 8rem);
+  }
+}
+
+/* Phones: keep only the pieces that frame the corners. */
+@media (max-width: 40rem) {
+  .hero-decor-shoreline {
+    height: clamp(8rem, 24vh, 14rem);
+  }
+
+  .hero-decor-leaf-top-left-accent,
+  .hero-decor-leaf-top-right-accent,
+  .hero-decor-leaf-top-left-mid,
+  .hero-decor-feather-right,
+  .hero-decor-traces-right {
+    display: none;
+  }
+
+  .hero-decor-traces-top-left {
+    top: 7%;
+    left: 6%;
+    width: 56vw;
+    opacity: 0.18;
+  }
+
+  .hero-decor-leaf-top-left {
+    top: -5%;
+    left: -4%;
+    width: 12rem;
+  }
+
+  .hero-decor-leaf-top-right {
+    top: -7%;
+    right: -46%;
+    width: 11.5rem;
+  }
+
+  .hero-decor-coral-teal {
+    left: -3%;
+    width: 5.5rem;
+  }
+
+  .hero-decor-coral-red {
+    left: 9%;
+    bottom: 0;
+    width: 3.75rem;
+  }
+
+  .hero-decor-coral-fan {
+    left: 21%;
+    bottom: 0;
+    width: 4rem;
+  }
+
+  .hero-decor-palm-tree-far {
+    right: 11%;
+    bottom: 5.75rem;
+    width: 3rem;
+  }
+
+  .hero-decor-palm-tree-near {
+    right: 0;
+    bottom: 5.5rem;
+    width: 3.75rem;
+  }
+
+  .hero-decor-sand {
+    width: clamp(17rem, 74vw, 19rem);
+  }
+
+  .hero-decor-rock {
+    bottom: 0.35rem;
+    left: 42%;
+    width: 2.6rem;
+  }
+}
+
+/* Landscape phones and other very short viewports: shrink the frame so the
+   headline keeps the stage. */
+@media (max-height: 34rem) {
+  .hero-decor-shoreline {
+    height: 5.5rem;
+  }
+
+  .hero-decor-sand {
+    width: 12rem;
+    height: auto;
+  }
+
+  .hero-decor-leaf-top-left {
+    top: -6%;
+    width: 7.5rem;
+  }
+
+  .hero-decor-leaf-top-right {
+    top: -14%;
+    right: -2%;
+    width: 7rem;
+  }
+
+  .hero-decor-leaf-top-left-accent,
+  .hero-decor-leaf-top-left-mid,
+  .hero-decor-feather-right,
+  .hero-decor-rock {
+    display: none;
+  }
+
+  .hero-decor-coral-teal {
+    width: 4.5rem;
+  }
+
+  .hero-decor-coral-red {
+    left: 8%;
+    width: 3rem;
+  }
+
+  .hero-decor-coral-fan {
+    left: 16%;
+    width: 3.25rem;
+  }
+
+  .hero-decor-palm-tree-far {
+    right: 16%;
+    bottom: 3.5rem;
+    width: 2.5rem;
+  }
+
+  .hero-decor-palm-tree-near {
+    right: 3%;
+    bottom: 3.75rem;
+    width: 3rem;
+  }
+}
+
+/* Keep the upper frame clear of the emblem on short portrait phones. */
+@media (orientation: portrait) and (max-width: 40rem) and (max-height: 42rem) {
+  .hero-decor-leaf-top-left {
+    top: -6%;
+    width: clamp(7.5rem, 24vh, 9.5rem);
+  }
+
+  .hero-decor-leaf-top-right {
+    top: -8%;
+    right: -34%;
+    width: clamp(7rem, 22vh, 9rem);
+  }
+}

@@ -19,4 +19,4 @@ extend-exclude = ["staticfiles"]
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "UP", "B", "SIM", "DJ", "S"]
 # `assert` narrows types in tests; Django's test runner never strips it.
-per-file-ignores = { "*/tests.py" = ["S101"] }
+per-file-ignores = { "*/test*.py" = ["S101"] }
