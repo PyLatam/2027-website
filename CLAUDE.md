@@ -98,7 +98,9 @@ Run the loop for every site you touched before reporting a change as done.
   (`ribbonPath`, `canopyBlobs`) rather than hand-written path
   data, and goes in `src/components/decor/` as pure components that take
   `className`/`style` and know nothing about where they sit. **Django:** the
-  Python port must produce byte-identical SVG output.
+  Python port must produce identical SVG output, except for React-generated
+  (`useId`) ids. Python and JS round and print numbers differently; read the
+  Phase 3 pitfalls in `docs/django-migration.md` before porting any maths.
 - Every decor item must set its own `width` in `HeroDecor.module.css`. Forget it
   and the fallback in `.item` keeps it small instead of covering the page —
   but that fallback is a safety net, not a size.

@@ -23,7 +23,7 @@ once the Django site reaches parity and takes over production.
 | 0   | Move the React site  | Site lives in `legacy-react/`; CI and deploy run from there; build unchanged                       |
 | 1   | Django skeleton      | `web/` runs locally; `landing` view; `<head>` (meta, OG, hreflang, JSON-LD) and dictionary ported  |
 | 2   | Language and shell   | Remembered choice + `Accept-Language`; language switcher, footer, social icons; skip link works    |
-| 3   | Scene                | Hero type, `BrandMark`/`BrandShape`, and `src/lib/svg/` ported with the same PRNG; SVG identical   |
+| 3   | Scene                | Hero type, `BrandMark`/`BrandShape`, and `src/lib/svg/` ported with the same PRNG; SVG identical except generated ids |
 | 4   | Visual parity        | Pixel diff at 320, 390, 768, 1280, 1440, 1920, 2560; zero horizontal overflow; no dead band        |
 | 5   | Cut-over and cleanup | Hosting chosen, CI/deploy switched, AGENTS.md/CLAUDE.md rewritten, `legacy-react/` removed         |
 
@@ -72,7 +72,29 @@ once the Django site reaches parity and takes over production.
     static export would serve the default (Spanish) unless the visitor uses
     `?lang=`. Factor this into the pending hosting decision.
 - **Phase 3 — next.** Scene: hero type, `BrandMark`/`BrandShape`, and the
-  `src/lib/svg/` generators with the same PRNG.
+  `src/lib/svg/` generators with the same PRNG, as a full Python port (see
+  the decision log). Known pitfalls for identical output:
+  - `Math.round` rounds halves towards +∞; Python's `round` rounds half to
+    even. Port the JS rule.
+  - `Number(n.toFixed(2)).toString()` (`ribbon.ts`) rounds exact ties up
+    (`0.125` → `0.13`; Python's `f"{0.125:.2f}"` gives `0.12`) and turns
+    `-0.00` into `0`. Needs a dedicated helper.
+  - JS prints `3` where Python prints `3.0`. Every number written into SVG
+    goes through one JS-compatible formatter.
+  - Mulberry32 (`random.ts`) relies on 32-bit `>>>` and `Math.imul`; mask
+    with `0xFFFFFFFF` and emulate `imul`.
+  - `Math.hypot` / `Math.cos` may differ from Python by one ulp; the golden
+    tests below catch any case where that changes a rounded digit.
+  - **Verification:** a Node script generates golden JSON from the real
+    TypeScript generators (PRNG sequences, `ribbonPath`, `canopyBlobs`, each
+    decor component's markup). The JSON is committed under `web/`, so the
+    Python tests need no Node and outlive `legacy-react/`.
+  - **"Identical" excludes generated ids.** `useId` ids depend on React's
+    internals and are not reproduced. Tests compare markup with ids
+    normalised, and separately check that every id is unique and every
+    `url(#…)`/`href="#…"` reference resolves.
+  - When the hero lands, move `id="content"` from `<main>` to the hero
+    `<section>`, as in React.
 
 ## Decision log
 
@@ -82,7 +104,8 @@ once the Django site reaches parity and takes over production.
 | 2026-11-12 | Django runs **locally only** for now; nothing in `web/` is deployed      | Decided     |
 | 2026-11-12 | `deploy.yml` only fires on `legacy-react/**` changes, so it stays separate | Decided     |
 | 2026-11-12 | Production hosting for Django (static export to GitHub Pages vs. server) | **Pending** |
-| 2026-11-12 | Full Python port of the scene vs. hybrid (`django-vite` serving React)   | **Pending** |
+| 2026-11-12 | Full Python port of the scene, not hybrid (`django-vite` serving React)  | Decided     |
+| 2026-11-12 | Scene parity means identical SVG except React-generated (`useId`) ids    | Decided     |
 
 ### Pending: hosting
 
@@ -96,3 +119,12 @@ GitHub Pages only serves static files, so it cannot run Django. Options:
 
 Until this is decided, production keeps deploying `legacy-react/` and nothing
 in `web/` may assume either option.
+
+### Decided: full Python port of the scene
+
+The scene is static SVG with no interaction, and the generators are about 220
+lines of pure arithmetic. A hybrid would keep Node in the build permanently
+and complicate the hosting decision for no user-facing gain. Rendering the
+scene server-side also means it appears without JavaScript, which the React
+site cannot do. The cost is careful numeric porting; see the Phase 3 pitfalls
+under Progress.
