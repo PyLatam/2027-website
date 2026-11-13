@@ -11,6 +11,11 @@ permissions:
 jobs:
   verify:
     runs-on: ubuntu-latest
+    # The React site lives in legacy-react/ while the Django port is built in
+    # web/. See docs/django-migration.md.
+    defaults:
+      run:
+        working-directory: legacy-react
     steps:
       - uses: actions/checkout@v5
 
@@ -18,6 +23,7 @@ jobs:
         with:
           node-version: 22
           cache: npm
+          cache-dependency-path: legacy-react/package-lock.json
 
       - run: npm ci
       - run: npm run typecheck
