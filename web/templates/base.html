@@ -1,0 +1,53 @@
+{% load static site_i18n %}<!doctype html>
+<html lang="{{ lang_tag }}">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {# Verbatim from legacy-react/index.html; a meta tag cannot read a CSS token. #}
+    <meta name="theme-color" content="#2ba7c9" />
+
+    <title>{% t "meta.title" %}</title>
+    <meta name="description" content="{% t "meta.description" %}" />
+    <link rel="canonical" href="{{ event.canonical_url }}" />
+
+    <link rel="icon" type="image/svg+xml" href="{% static 'favicon.svg' %}" />
+    <link rel="apple-touch-icon" href="{% static 'apple-touch-icon.png' %}" />
+
+    {% for code in locales %}
+    <link rel="alternate" hreflang="{{ code }}" href="{{ event.canonical_url }}?lang={{ code }}" />
+    {% endfor %}
+    <link rel="alternate" hreflang="x-default" href="{{ event.canonical_url }}" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="{{ og_locale }}" />
+    {% for alternate in og_locale_alternates %}
+    <meta property="og:locale:alternate" content="{{ alternate }}" />
+    {% endfor %}
+    <meta property="og:site_name" content="{{ event.name }}" />
+    <meta property="og:title" content="{% t "meta.title" %}" />
+    <meta property="og:description" content="{% t "meta.ogDescription" %}" />
+    <meta property="og:url" content="{{ event.canonical_url }}" />
+    <meta property="og:image" content="{{ event.canonical_url }}og-image.jpg" />
+    <meta property="og:image:width" content="1280" />
+    <meta property="og:image:height" content="720" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Courgette&family=Outfit:wght@400;600&family=Yellowtail&display=swap"
+    />
+
+    <link rel="stylesheet" href="{% static 'css/global.css' %}" />
+    {% block styles %}{% endblock %}
+
+    <script type="application/ld+json">
+{{ json_ld }}
+    </script>
+  </head>
+  <body>
+    {# `#root` keeps the wrapper the React site renders into, so global.css applies unchanged. #}
+    <div id="root">{% block body %}{% endblock %}</div>
+  </body>
+</html>

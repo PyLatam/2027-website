@@ -1,0 +1,22 @@
+[project]
+name = "pycon-latam-2027-web"
+version = "0.1.0"
+description = "PyCon Latam 2027 website, Django port"
+requires-python = ">=3.14"
+dependencies = [
+    "django>=6.1.3",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.17.5",
+]
+
+[tool.ruff]
+line-length = 100
+extend-exclude = ["staticfiles"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM", "DJ", "S"]
+# `assert` narrows types in tests; Django's test runner never strips it.
+per-file-ignores = { "*/tests.py" = ["S101"] }

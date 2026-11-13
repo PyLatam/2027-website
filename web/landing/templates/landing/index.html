@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load static site_i18n %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'css/app.css' %}" />
+{% endblock %}
+
+{% block body %}
+<div class="app-shell">
+  <a class="app-skip-link" href="#content">{% t "skip.toContent" %}</a>
+  {# Phase 2: the language switcher goes in .app-toolbar. #}
+  <main class="app-main" id="content">
+    {# Phase 1 placeholder: the same text the React site's <noscript> fallback shows. #}
+    {# Phases 3–4 replace it with the hero and its scene. #}
+    <h1>{% t "hero.aria" %}</h1>
+  </main>
+  {# Phase 2: footer. #}
+</div>
+{% endblock %}

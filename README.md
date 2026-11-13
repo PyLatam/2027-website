@@ -15,9 +15,15 @@ TypeScript · React 19 · Vite 7 · CSS Modules · GitHub Actions → GitHub Pag
 No CSS framework, no illustration library: every shape on the page is
 hand-authored SVG.
 
+> **Migration in progress.** The React site now lives in `legacy-react/` and is
+> being ported to Django in `web/`. See
+> [docs/django-migration.md](./docs/django-migration.md). Until the cut-over,
+> run every `npm` command from `legacy-react/`.
+
 ## Getting started
 
 ```bash
+cd legacy-react
 npm install
 npm run dev
 ```
