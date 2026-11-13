@@ -33,6 +33,7 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "core.middleware.LocaleMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -45,6 +46,7 @@ TEMPLATES = [
         "OPTIONS": {
             "context_processors": [
                 "django.template.context_processors.request",
+                "core.context_processors.site",
             ],
         },
     },
@@ -55,7 +57,8 @@ WSGI_APPLICATION = "config.wsgi.application"
 # No database: the site has no persistent state.
 DATABASES: dict[str, dict[str, object]] = {}
 
-# Locale handling is the site's own (core.locales), driven by `?lang=`;
+# Locale handling is the site's own (core.locales + core.middleware): `?lang=`,
+# then a remembered-choice cookie, then `Accept-Language`, then Spanish.
 # Django's gettext machinery is not used.
 LANGUAGE_CODE = "es"
 USE_I18N = False

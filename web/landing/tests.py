@@ -4,6 +4,7 @@ import re
 from django.test import SimpleTestCase
 
 from core.content import EVENT
+from core.locales import LOCALE_COOKIE
 
 
 class IndexViewTests(SimpleTestCase):
@@ -36,3 +37,104 @@ class IndexViewTests(SimpleTestCase):
         response = self.client.get("/")
         for code in ("es", "en", "x-default"):
             self.assertContains(response, f'hreflang="{code}"')
+
+    def test_skip_link_targets_an_element_that_exists(self) -> None:
+        html = self.client.get("/").content.decode()
+        self.assertIn('href="#content"', html)
+        self.assertEqual(html.count('id="content"'), 1)
+
+
+class RememberedLocaleTests(SimpleTestCase):
+    def test_lang_param_is_remembered_in_a_cookie(self) -> None:
+        response = self.client.get("/", {"lang": "en"})
+        cookie = response.cookies[LOCALE_COOKIE]
+        self.assertEqual(cookie.value, "en")
+        self.assertTrue(cookie["max-age"])
+        self.assertTrue(cookie["httponly"])
+        self.assertEqual(cookie["samesite"], "Lax")
+
+    def test_remembered_choice_applies_without_the_param(self) -> None:
+        self.client.get("/", {"lang": "en"})
+        response = self.client.get("/", headers={"accept-language": "es"})
+        self.assertContains(response, '<html lang="en">')
+
+    def test_new_choice_replaces_the_old_one(self) -> None:
+        self.client.get("/", {"lang": "en"})
+        self.client.get("/", {"lang": "es"})
+        self.assertContains(self.client.get("/"), '<html lang="es-419">')
+
+    def test_no_cookie_without_an_explicit_choice(self) -> None:
+        response = self.client.get("/", headers={"accept-language": "en"})
+        self.assertContains(response, '<html lang="en">')
+        self.assertNotIn(LOCALE_COOKIE, response.cookies)
+
+    def test_unsupported_lang_param_is_not_remembered(self) -> None:
+        response = self.client.get("/", {"lang": "fr"})
+        self.assertNotIn(LOCALE_COOKIE, response.cookies)
+
+    def test_response_varies_on_cookie_and_accept_language(self) -> None:
+        vary = self.client.get("/")["Vary"]
+        self.assertIn("Cookie", vary)
+        self.assertIn("Accept-Language", vary)
+
+
+class LanguageSwitcherTests(SimpleTestCase):
+    def options(self, lang: str) -> list[str]:
+        html = self.client.get("/", {"lang": lang}).content.decode()
+        return re.findall(r'<a\s[^>]*class="language-switcher-option"[^>]*>.*?</a>', html, re.S)
+
+    def test_one_plain_link_per_locale(self) -> None:
+        options = self.options("es")
+        self.assertEqual(len(options), 2)
+        self.assertIn('href="?lang=es"', options[0])
+        self.assertIn('href="?lang=en"', options[1])
+        self.assertIn(">ES</a>", options[0])
+        self.assertIn(">EN</a>", options[1])
+
+    def test_current_locale_is_marked(self) -> None:
+        for lang, current in (("es", 0), ("en", 1)):
+            with self.subTest(lang=lang):
+                options = self.options(lang)
+                self.assertIn('aria-current="true"', options[current])
+                self.assertNotIn('aria-current="true"', options[1 - current])
+
+    def test_labels_are_localised(self) -> None:
+        es = self.options("es")
+        self.assertIn('aria-label="Cambiar idioma a English"', es[1])
+        en = self.options("en")
+        self.assertIn('aria-label="Switch language to Español"', en[0])
+
+    def test_switcher_sits_in_the_toolbar(self) -> None:
+        self.assertContains(
+            self.client.get("/"), 'class="language-switcher app-toolbar" role="group"'
+        )
+
+
+class FooterTests(SimpleTestCase):
+    def test_social_links_come_from_content(self) -> None:
+        response = self.client.get("/")
+        for url in (
+            EVENT.social.x,
+            EVENT.social.instagram,
+            EVENT.social.linkedin,
+            EVENT.social.facebook,
+        ):
+            with self.subTest(url=url):
+                self.assertContains(response, f'href="{url}"', count=1)
+
+    def test_every_social_link_has_an_icon(self) -> None:
+        html = self.client.get("/").content.decode()
+        self.assertEqual(html.count('class="footer-social-link"'), 4)
+        self.assertEqual(
+            html.count('<svg viewBox="0 0 24 24" fill="currentColor" class="footer-icon"'), 4
+        )
+
+    def test_copy_is_localised(self) -> None:
+        es = self.client.get("/", {"lang": "es"})
+        self.assertContains(es, f"&copy; {EVENT.year} {EVENT.name}. Todos los derechos reservados.")
+        self.assertContains(es, 'aria-label="Instagram de PyCon Latam"')
+        self.assertContains(es, 'aria-label="Redes sociales"')
+        en = self.client.get("/", {"lang": "en"})
+        self.assertContains(en, "All rights reserved.")
+        self.assertContains(en, 'aria-label="PyCon Latam on Instagram"')
+        self.assertContains(en, 'aria-label="Social media"')

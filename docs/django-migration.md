@@ -44,10 +44,35 @@ once the Django site reaches parity and takes over production.
   follow `?lang=`). The dictionary was ported early because the head needs it;
   two keys were added (`meta.ogDescription`, `meta.eventDescription`) for copy
   the React site had hardcoded in Spanish only. The body is a placeholder.
-- **Phase 2 — next.** Remembered language choice (cookie, replacing the React
-  site's `localStorage`), `Accept-Language`, language switcher as plain links,
-  footer with social icons. Sources: `legacy-react/src/i18n/detectLocale.ts`,
-  `legacy-react/src/components/ui/{LanguageSwitcher,Footer,SocialIcons}.tsx`.
+- **Phase 2 — done.** Language and shell.
+  - Locale is resolved server-side in `detectLocale.ts` order: `?lang=` >
+    remembered choice > `Accept-Language` (q-values honoured, base subtag
+    matched) > Spanish. `core.middleware.LocaleMiddleware` sets
+    `request.locale`, stores a valid `?lang=` in the `pyconlatam.locale`
+    cookie (same name as the React `localStorage` key; one year, `HttpOnly`,
+    `SameSite=Lax`) and adds `Vary: Cookie, Accept-Language`.
+  - Shell context (locale, switcher options, social links) comes from
+    `core.context_processors.site`; the partials are
+    `templates/shell/{language_switcher,footer}.html`.
+  - The language switcher is plain `?lang=` links, no JavaScript. The current
+    language carries `aria-current="true"` instead of `aria-pressed`, which is
+    only valid on buttons. CSS: `language-switcher.css`, plus
+    `text-decoration: none` because the options are now links.
+  - The footer and social icons are ported in `footer.css`. The icon SVGs in
+    `templates/icons/` have the same path data as `SocialIcons.tsx`, checked
+    by script. URLs come from `core.content`.
+  - The skip link targets `#content`, as in React. Until Phase 3 the id sits
+    on `<main>`; it then moves to the hero `<section>`, where React has it.
+  - Django-only key: `footer.social` ("Redes sociales" / "Social media") for
+    the social list's `aria-label`, which React hardcodes in English.
+  - Verified with Playwright at 390, 768, 1440 and 1920 wide, in both
+    languages: switcher and footer bounding boxes are identical to React, with
+    zero horizontal overflow.
+  - **Hosting note:** the cookie and `Accept-Language` steps need a server. A
+    static export would serve the default (Spanish) unless the visitor uses
+    `?lang=`. Factor this into the pending hosting decision.
+- **Phase 3 — next.** Scene: hero type, `BrandMark`/`BrandShape`, and the
+  `src/lib/svg/` generators with the same PRNG.
 
 ## Decision log
 

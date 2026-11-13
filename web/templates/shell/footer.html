@@ -1,0 +1,22 @@
+{% load site_i18n %}
+{# Ported from legacy-react/src/components/ui/Footer.tsx. URLs come from core.content. #}
+<footer class="footer {{ class_name }}">
+  <div class="footer-inner">
+    <span class="footer-copyright">&copy; {{ event.year }} {{ event.name }}. {% t "footer.rights" %}</span>
+
+    <ul class="footer-social-list" aria-label="{% t "footer.social" %}">
+      {% for link in social_links %}
+      <li>
+        <a
+          href="{{ link.href }}"
+          class="footer-social-link"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="{% t link.label_key %}"
+          title="{% t link.label_key %}"
+        >{% include link.icon with class_name="footer-icon" only %}</a>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</footer>

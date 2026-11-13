@@ -3,17 +3,21 @@
 
 {% block styles %}
 <link rel="stylesheet" href="{% static 'css/app.css' %}" />
+<link rel="stylesheet" href="{% static 'css/language-switcher.css' %}" />
+<link rel="stylesheet" href="{% static 'css/footer.css' %}" />
 {% endblock %}
 
 {% block body %}
 <div class="app-shell">
+  {# Same target as the React site's skip link. There `#content` is the hero <section>; #}
+  {# until Phase 3 ports the hero, it sits on <main>, then moves to the section. #}
   <a class="app-skip-link" href="#content">{% t "skip.toContent" %}</a>
-  {# Phase 2: the language switcher goes in .app-toolbar. #}
+  {% include "shell/language_switcher.html" with class_name="app-toolbar" %}
   <main class="app-main" id="content">
     {# Phase 1 placeholder: the same text the React site's <noscript> fallback shows. #}
     {# Phases 3–4 replace it with the hero and its scene. #}
     <h1>{% t "hero.aria" %}</h1>
   </main>
-  {# Phase 2: footer. #}
+  {% include "shell/footer.html" %}
 </div>
 {% endblock %}
