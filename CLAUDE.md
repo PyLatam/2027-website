@@ -101,6 +101,9 @@ Run the loop for every site you touched before reporting a change as done.
   Python port must produce identical SVG output, except for React-generated
   (`useId`) ids. Python and JS round and print numbers differently; read the
   Phase 3 pitfalls in `docs/django-migration.md` before porting any maths.
+  Numbers go through `web/core/svg/numbers.py`, never `str()`/f-strings.
+  After changing a generator or decor component in either site, run
+  `node web/golden/generate.mjs` (repo root, nvm loaded) and the Django tests.
 - Every decor item must set its own `width` in `HeroDecor.module.css`. Forget it
   and the fallback in `.item` keeps it small instead of covering the page —
   but that fallback is a safety net, not a size.
