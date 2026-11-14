@@ -5,8 +5,11 @@ instead of buttons, so it works without JavaScript: each one reloads the page
 with `?lang=`, which the server remembers in a cookie. The current language is
 marked with `aria-current` (`aria-pressed` is only valid on buttons).
 Pass `class_name` to let the parent place it.
+
+`spaceless` keeps the DOM React renders: no text nodes between the options.
 {% endcomment %}
 <div class="language-switcher {{ class_name }}" role="group" aria-label="{% t "lang.legend" %}">
+  {% spaceless %}
   {% for option in language_options %}
   <a
     href="{{ option.href }}"
@@ -17,4 +20,5 @@ Pass `class_name` to let the parent place it.
     aria-label="{% t "lang.switchTo" language=option.label %}"
   >{% t option.short_key %}</a>
   {% endfor %}
+  {% endspaceless %}
 </div>

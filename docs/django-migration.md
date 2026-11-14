@@ -24,7 +24,7 @@ once the Django site reaches parity and takes over production.
 | 1   | Django skeleton      | `web/` runs locally; `landing` view; `<head>` (meta, OG, hreflang, JSON-LD) and dictionary ported  |
 | 2   | Language and shell   | Remembered choice + `Accept-Language`; language switcher, footer, social icons; skip link works    |
 | 3   | Scene                | Hero type, `BrandMark`/`BrandShape`, and `src/lib/svg/` ported with the same PRNG; SVG identical except generated ids |
-| 4   | Visual parity        | Pixel diff at 320, 390, 768, 1280, 1440, 1920, 2560; zero horizontal overflow; no dead band        |
+| 4   | Visual parity        | Pixel diff at 320, 390, 768, 1024, 1280, 1366, 1440, 1920, 2560 + landscape phones, `es`/`en`; zero horizontal overflow; same surf gap |
 | 5   | Cut-over and cleanup | Hosting chosen, CI/deploy switched, AGENTS.md/CLAUDE.md rewritten, `legacy-react/` removed         |
 
 ### Rules while both sites exist
@@ -148,8 +148,57 @@ once the Django site reaches parity and takes over production.
     internals and are not reproduced. Tests compare markup with ids
     normalised, and separately check that every id is unique and every
     `url(#…)`/`href="#…"` reference resolves.
-- **Phase 4 — next.** Visual parity: pixel diff at every listed width,
-  in both languages.
+- **Phase 4 — done.** Visual parity: the two sites render pixel-identical
+  screenshots at every size checked, in both languages.
+  - `web/golden/compare.py` is the versioned check. It drives Playwright at
+    both running sites (React preview and a Django `runserver`; it starts
+    neither). For each size and language it measures horizontal overflow, the
+    boxes of the hero, inner column, emblem, `<h1>` and each line, every decor
+    piece, the switcher and the footer, the visible text of the headline,
+    switcher and footer, and the gap from the bottom of the dates line to the
+    top of the visible surf bands. Then it diffs the full-page screenshots
+    pixel by pixel inside Chromium (no Pillow), attributing every differing
+    pixel to the smallest measured box that contains it. It writes React,
+    Django, diff and side-by-side PNGs plus `report.json`, and exits 1 on any
+    failed check. Run and options: the module docstring.
+  - Sizes: 320×568, 375×667, 390×844, 667×375, 768×1024, 844×390, 1024×768,
+    1280×800, 1366×768, 1440×900, 1920×1080, 2560×1440, each in `es` and
+    `en` (24 cases).
+  - **Result:** 24/24 identical: zero differing pixels, zero horizontal
+    overflow, every box within 0.5 px (in practice exact), same text, same
+    surf gap on both sites.
+  - **Fixed in `web/`:** the language switcher had whitespace text nodes
+    between its links (`textContent` "ES EN" vs React's "ESEN"). It had no
+    visual effect in a flex row, but it was a DOM difference. Now wrapped in
+    `{% spaceless %}`.
+  - **The Phase 3 copyright diff is antialiasing, not markup or CSS.** The
+    serialised HTML, computed styles and `lang` match exactly. React renders
+    `© {year} {name}. {rights}` as six text nodes; the template gives one.
+    Chromium rounds each node's advance on its own, so glyphs move by
+    0.015–0.03 px and roughly 35–340 antialiased pixels change. Splitting
+    Django's text into the same six nodes gives a byte-identical screenshot.
+    The script merges adjacent text nodes (`Node.normalize()`) on both pages
+    before the screenshot; `--keep-text-nodes` shows the raw difference.
+  - **The Phase 3 palm pixels were rasteriser noise.** The palms and the sand
+    (`will-change: transform`) rasterised differently from one load to the
+    next, even with the page diffed against itself. Chromium now runs with
+    `--disable-partial-raster` and the animation clock stopped through CDP
+    before navigation. With that, repeated loads are identical, so the pixel
+    threshold is zero.
+  - Surf gap per size (both sites; negative = surf starts above the dates
+    line). This metric is the top of the visible wave bands' geometry, which
+    is stricter than Phase 3's: 320×568 +74.7, 375×667 +63.6, 390×844 +26.6,
+    667×375 −13.8, 768×1024 −10.9, 844×390 +26.9, 1024×768 +69.1,
+    1280×800 −8.4, 1366×768 −21.7, 1440×900 −5.8, 1920×1080 −9.6,
+    2560×1440 +59.7. The positive gaps belong to the React layout and the
+    port reproduces them. Closing them would be a design change for both
+    sites, not a parity fix.
+  - **Dev note:** in this WSL setup Playwright is only in uv's offline cache
+    for a non-3.14 Python, so run the script from outside `web/` (where
+    `.python-version` pins 3.14) with
+    `uv run --offline --no-project --with playwright==1.65.1 python -I …/compare.py --chromium …`.
+    Start `vite preview` with `setsid`, or it dies with the shell.
+- **Phase 5 — next.** Cut-over and cleanup, blocked on the hosting decision.
 
 ## Decision log
 

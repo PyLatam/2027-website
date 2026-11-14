@@ -39,7 +39,7 @@ uv run ruff format --check . && uv run ruff check . && uv run python manage.py c
 | `core/assets/`           | `assets/`                      | Logo and decor SVGs, byte-identical copies          |
 | `core/templatetags/decor.py` | `useId` + JSX              | `{% brand_shape %}`, `{% palm_tree %}`, …; one uid per instance |
 | `landing/`               | `features/hero/`, `app/`       | The page view; `hero.html`, `hero_decor.html`       |
-| `golden/`                | the TypeScript itself          | `generate.mjs` + the JSON the scene tests compare against |
+| `golden/`                | the TypeScript itself          | `generate.mjs` + the JSON the scene tests compare against; `compare.py` (visual parity) |
 | `templates/base.html`    | `index.html`                   | Document `<head>`                                   |
 | `templates/shell/`       | `components/ui/`               | Language switcher and footer partials               |
 | `templates/icons/`       | `components/ui/SocialIcons.tsx` | Social icon SVGs, path data verbatim               |
@@ -52,6 +52,11 @@ root (inside WSL, with nvm loaded) and run the tests:
 ```bash
 node web/golden/generate.mjs
 ```
+
+For visual parity, run `golden/compare.py` against both running sites (React
+preview and a `runserver`). It diffs every size in both languages and writes
+the screenshots to `--out`. Its docstring covers how to run it and what it
+checks.
 
 After adding a module under `templatetags/`, restart `runserver`; it does not
 pick up new tag libraries on its own.
