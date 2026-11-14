@@ -1,0 +1,13 @@
+# Never ship local secrets or VCS data in the image.
+.env
+.env.*
+.envrc
+.git/
+.venv/
+.ruff_cache/
+**/__pycache__/
+staticfiles/
+golden/
+Dockerfile
+.dockerignore
+fly.toml

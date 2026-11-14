@@ -1,7 +1,11 @@
 import json
+import os
 import re
+import subprocess
+import sys
+from pathlib import Path
 
-from django.test import SimpleTestCase
+from django.test import SimpleTestCase, override_settings
 
 from core.content import EVENT
 from core.locales import LOCALE_COOKIE
@@ -138,3 +142,28 @@ class FooterTests(SimpleTestCase):
         self.assertContains(en, "All rights reserved.")
         self.assertContains(en, 'aria-label="PyCon Latam on Instagram"')
         self.assertContains(en, 'aria-label="Social media"')
+
+
+class ProductionSettingsTests(SimpleTestCase):
+    def test_production_refuses_to_start_without_a_secret_key(self) -> None:
+        env = {**os.environ, "DJANGO_DEBUG": "0", "DJANGO_SECRET_KEY": ""}
+        result = subprocess.run(  # noqa: S603
+            [sys.executable, "-c", "import config.settings"],
+            cwd=Path(__file__).resolve().parent.parent,
+            env=env,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("DJANGO_SECRET_KEY must be set", result.stderr)
+
+
+class NoIndexTests(SimpleTestCase):
+    def test_no_robots_header_by_default(self) -> None:
+        self.assertNotIn("X-Robots-Tag", self.client.get("/").headers)
+
+    @override_settings(NOINDEX=True)
+    def test_test_deploys_ask_search_engines_to_skip_them(self) -> None:
+        response = self.client.get("/")
+        self.assertEqual(response.headers["X-Robots-Tag"], "noindex, nofollow")

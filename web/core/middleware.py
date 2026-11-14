@@ -1,7 +1,10 @@
-"""Per-request locale: resolve it once and remember an explicit choice."""
+"""Site middleware: the optional `noindex` header for test deploys, and the
+per-request locale (resolved once, an explicit choice remembered)."""
 
 from collections.abc import Callable
 
+from django.conf import settings
+from django.core.exceptions import MiddlewareNotUsed
 from django.http import HttpRequest, HttpResponse
 from django.utils.cache import patch_vary_headers
 
@@ -9,6 +12,21 @@ from core.locales import LOCALE_COOKIE, from_query_string, resolve_locale
 
 # One year: long enough to feel permanent, short enough to expire eventually.
 LOCALE_COOKIE_MAX_AGE = 60 * 60 * 24 * 365
+
+
+class NoIndexMiddleware:
+    """Asks search engines to skip every response when `settings.NOINDEX` is
+    set, so a test deploy on fly.dev never competes with the real domain."""
+
+    def __init__(self, get_response: Callable[[HttpRequest], HttpResponse]) -> None:
+        if not settings.NOINDEX:
+            raise MiddlewareNotUsed
+        self.get_response = get_response
+
+    def __call__(self, request: HttpRequest) -> HttpResponse:
+        response = self.get_response(request)
+        response["X-Robots-Tag"] = "noindex, nofollow"
+        return response
 
 
 class LocaleMiddleware:
