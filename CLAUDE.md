@@ -5,24 +5,67 @@ this repository: scope, language policy, architecture, design tokens and the
 non-negotiables. This file only records what is specific to working here with
 Claude Code, so the two documents cannot drift apart.
 
+## Migration in progress: React → Django
+
+Read [docs/django-migration.md](./docs/django-migration.md) for the plan,
+current phase and decision log.
+
+| Folder          | What it is                                                      |
+| --------------- | --------------------------------------------------------------- |
+| `legacy-react/` | The React site. Production. Frozen reference for the port.      |
+| `web/`          | The Django port. Test deploy on fly.dev; not on the real domain. |
+
+- Production hosting for Django is **decided: Fly.io**, one always-on Machine
+  with SQLite on a volume (see "Decided: hosting on Fly.io" in the migration
+  doc). It reaches `2027.pylatam.org` at the Phase 5 cut-over. Until then
+  `web/` deploys only to the test app `pyconlat-2027-test.fly.dev` (personal
+  Fly org, `noindex`), through `fly-deploy.yml` on pushes to `main`.
+- Fly rejects app names containing "latam" (abuse filter), hence `pyconlat`.
+- The repository is public. Secrets live only in `flyctl secrets` and GitHub
+  Actions secrets; never in `fly.toml`, the Dockerfile or the code.
+- There is no staging environment. Previews run on a local `runserver`
+  shared through ngrok.
+- `deploy.yml` only fires on `legacy-react/**`, and `fly-deploy.yml` only on
+  `web/**`. Keep them separate.
+- Never push or deploy without being asked: the user reviews everything locally
+  first.
+- Unless a rule says otherwise, `src/…` paths below are relative to
+  `legacy-react/`. Each rule has a Django counterpart under "House style".
+
+## Environment
+
+The repo lives in WSL (`~/2027-website`) and is opened from Windows through
+`\\wsl.localhost\Ubuntu\…`. Git refuses that path ("dubious ownership"),
+and Node is installed via nvm, so run tooling inside WSL:
+
+```powershell
+wsl -d Ubuntu -- bash -lc "cd ~/2027-website && git status"
+wsl -d Ubuntu -- bash -lc "source ~/.nvm/nvm.sh && cd ~/2027-website/legacy-react && npm run build"
+wsl -d Ubuntu -- bash -lc "cd ~/2027-website/web && uv run python manage.py runserver"
+```
+
 ## The three things most likely to trip you up
 
 1. **Scope is intentionally tiny.** This landing page says only what the
    official key art says: "PyCon Latam 2027 / Nos vemos en Punta Cana,
-   República Dominicana". The dates are not public yet. Do not helpfully add an
-   agenda, speakers, a countdown or a registration form — inventing details
-   about a real conference is a defect, not a feature.
+   República Dominicana", plus the confirmed dates (26 – 29 August 2027). Do
+   not helpfully add an agenda, speakers, a countdown or a registration form —
+   inventing details about a real conference is a defect, not a feature. The
+   migration ports the page as it is; it adds nothing.
 
 2. **Two languages, two registers.** The site is bilingual (Spanish primary,
    English secondary); the _codebase_ is English-only. Comments, identifiers,
    commit messages and Markdown are English. Spanish lives in
-   `src/i18n/dictionary.ts` and in the `<noscript>` fallback of `index.html`.
+   `src/i18n/dictionary.ts` and the `<noscript>` of `index.html` (React), and
+   in `web/core/dictionary.py` (Django).
 
 3. **Verify visually, at several sizes.** CSS here is tuned against real
-   screenshots, not guessed. After any layout or typography change:
+   screenshots, not guessed. After any layout or typography change, run both
+   sites side by side:
 
    ```bash
-   npm run build && npm run preview   # http://localhost:4173/2027-website/
+   cd legacy-react && npm run build && npm run preview   # http://localhost:4173/
+   cd web && uv run python manage.py runserver           # http://127.0.0.1:8000/
    ```
 
    then capture at least 390×844, 768×1024, 1440×900 and 1920×1080 and look at
@@ -31,29 +74,51 @@ Claude Code, so the two documents cannot drift apart.
 
 ## Verification loop
 
+React (`legacy-react/`). CI runs exactly these four:
+
 ```bash
 npm run typecheck && npm run lint && npx prettier --check . && npm run build
 ```
 
-CI runs exactly these four. Run them before reporting a change as done.
+Django (`web/`). Not in CI yet:
+
+```bash
+uv run ruff format --check . && uv run ruff check . && uv run python manage.py check && uv run python manage.py test
+```
+
+Run the loop for every site you touched before reporting a change as done.
 
 ## House style
 
 - Add copy by adding a key to the `es` dictionary — the `Messages` type then
   forces the `en` translation to exist. Never inline a user-facing string.
+  **Django:** add the key to `ES` and `EN` in `web/core/dictionary.py` (a test
+  fails if they differ) and render it with `{% t "key" %}`.
 - Never hardcode a colour, font or duration; read a token from
   `src/styles/tokens.css`. The five brand colours come from the official logo.
+  **Django:** `web/static/css/tokens.css` is a verbatim copy; change both.
+- Event facts (dates, venue, URLs) live in `src/content/event.ts`; **Django:**
+  `web/core/content.py`. Templates never inline them.
 - **Never redraw the logo, and never redraw supplied artwork.** `BrandMark`
   inlines the designer's mark; `BrandShape` inlines the supplied leaves, corals
   and dots. Check the catalogue in `src/components/decor/shapes.ts` _before_
-  drawing anything new.
+  drawing anything new. **Django:** include the same SVG files verbatim.
 - Scenery with no supplied artwork builds on the generators in `src/lib/svg/`
   (`ribbonPath`, `canopyBlobs`) rather than hand-written path
   data, and goes in `src/components/decor/` as pure components that take
-  `className`/`style` and know nothing about where they sit.
+  `className`/`style` and know nothing about where they sit. **Django:** the
+  Python port must produce identical SVG output, except for React-generated
+  (`useId`) ids. Python and JS round and print numbers differently; read the
+  Phase 3 pitfalls in `docs/django-migration.md` before porting any maths.
+  Numbers go through `web/core/svg/numbers.py`, never `str()`/f-strings.
+  After changing a generator or decor component in either site, run
+  `node web/golden/generate.mjs` (repo root, nvm loaded) and the Django tests.
 - Every decor item must set its own `width` in `HeroDecor.module.css`. Forget it
   and the fallback in `.item` keeps it small instead of covering the page —
   but that fallback is a safety net, not a size.
 - Randomness in artwork is always seeded (`createRandom`). `Math.random()` in a
-  shape is a bug: it makes the scene reshuffle on every render.
+  shape is a bug: it makes the scene reshuffle on every render. In Python,
+  `random` is equally a bug — port the same PRNG.
+- CSS Modules become plain CSS with a per-component prefix (`App.module.css` →
+  `app.css` with `.app-*`).
 - Prefer editing a token or a `clamp()` over adding a new media query.

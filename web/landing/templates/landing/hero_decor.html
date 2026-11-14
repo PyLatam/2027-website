@@ -1,0 +1,43 @@
+{% load decor %}
+{% comment %}
+  Ported from legacy-react/src/features/hero/HeroDecor.tsx. Placement lives in
+  static/css/hero-decor.css.
+
+  The scene the headline sits in, painted strictly back to front:
+
+    circuit traces → canopy → water → beach → reef → foreground planting
+
+  Composition and placement live here; the shapes themselves know nothing about
+  where they end up. Everything is aria-hidden and non-interactive: the message
+  must read identically with every image stripped away.
+{% endcomment %}
+<div class="hero-decor" aria-hidden="true">
+  {# --- background texture --- #}
+  {% circuit_traces class_name="hero-decor-traces hero-decor-traces-left" %}
+  {% circuit_traces class_name="hero-decor-traces hero-decor-traces-lower-left" %}
+  {% circuit_traces class_name="hero-decor-traces hero-decor-traces-top-left" %}
+  {% circuit_traces class_name="hero-decor-traces hero-decor-traces-right" %}
+
+  {# Canopy: fronds hanging from the top edge, all pointing down and clearly spaced. #}
+  {# The key art never overlaps two large leaves; that reads as a mess, not as foliage. #}
+  {% brand_shape "leaf-frond-02" color="var(--c-aqua-500)" class_name="hero-decor-item hero-decor-leaf-top-left hero-decor-float" %}
+  {% brand_shape "leaf-frond-02" color="var(--c-ocean-500)" class_name="hero-decor-item hero-decor-leaf-top-left-mid hero-decor-float-slow" %}
+  {% brand_shape "leaf-frond-01" color="var(--c-tangerine-500)" class_name="hero-decor-item hero-decor-leaf-top-left-accent hero-decor-float" %}
+  {% brand_shape "leaf-frond-02" color="var(--c-aqua-500)" class_name="hero-decor-item hero-decor-leaf-top-right hero-decor-float-slow" %}
+  {% brand_shape "leaf-frond-01" color="var(--c-tangerine-500)" class_name="hero-decor-item hero-decor-leaf-top-right-accent hero-decor-float" %}
+
+  {# --- water and beach (the jungle is drawn inside sand_cove) --- #}
+  {% shoreline class_name="hero-decor-shoreline" %}
+  {% palm_tree trunk_color="var(--c-aqua-600)" crown_color="var(--c-aqua-600)" class_name="hero-decor-item hero-decor-palm-tree-far hero-decor-float-slow" %}
+  {% palm_tree trunk_color="var(--c-ocean-400)" crown_color="var(--c-ocean-400)" fronds=8 flip=True class_name="hero-decor-item hero-decor-palm-tree-near hero-decor-float" %}
+  {% sand_cove class_name="hero-decor-sand" %}
+  {% sea_rock class_name="hero-decor-item hero-decor-rock" %}
+
+  {# --- reef, in front of the water --- #}
+  {% brand_shape "coral-staghorn" color="var(--c-aqua-500)" class_name="hero-decor-item hero-decor-coral-teal" %}
+  {% brand_shape "coral-branch" color="var(--c-coral-500)" class_name="hero-decor-item hero-decor-coral-red" %}
+  {% brand_shape "coral-fan" color="var(--c-aqua-600)" class_name="hero-decor-item hero-decor-coral-fan" %}
+
+  {# --- foreground: one leaf, entering from the corner --- #}
+  {% brand_shape "leaf-frond-01" color="var(--c-coral-500)" class_name="hero-decor-item hero-decor-feather-right hero-decor-float-slow" %}
+</div>

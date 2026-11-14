@@ -224,3 +224,6 @@ dist/
 *.local
 .DS_Store
 *:Zone.Identifier
+
+# ---------------------------------------------------------------- django
+web/staticfiles/

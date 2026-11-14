@@ -3,6 +3,11 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
+    # Only the React site deploys here. The Django port in web/ deploys to a
+    # Fly.io test app through fly-deploy.yml (see docs/django-migration.md).
+    paths:
+      - 'legacy-react/**'
+      - '.github/workflows/deploy.yml'
   workflow_dispatch:
 
 # Allow the workflow to publish to Pages via OIDC.
@@ -19,6 +24,11 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # Production is still the React site until the Django port reaches parity.
+    # See docs/django-migration.md.
+    defaults:
+      run:
+        working-directory: legacy-react
     steps:
       - uses: actions/checkout@v5
 
@@ -26,6 +36,7 @@ jobs:
         with:
           node-version: 22
           cache: npm
+          cache-dependency-path: legacy-react/package-lock.json
 
       - name: Install dependencies
         run: npm ci
@@ -52,7 +63,7 @@ jobs:
 
       - uses: actions/upload-pages-artifact@v4
         with:
-          path: dist
+          path: legacy-react/dist
 
   deploy:
     needs: build

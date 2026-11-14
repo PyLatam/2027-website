@@ -1,0 +1,48 @@
+/*
+ * Application shell. Ported from legacy-react/src/app/App.module.css; CSS
+ * Module class names become `app-*` classes.
+ *
+ * A column, not a stack of overlays: the hero takes every pixel the footer does
+ * not, so the sea always ends exactly where the footer begins instead of being
+ * covered by it.
+ */
+.app-shell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100svh;
+}
+
+.app-main {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.app-toolbar {
+  position: absolute;
+  z-index: 2;
+  top: clamp(0.75rem, 2.5vh, 1.5rem);
+  inset-inline-end: clamp(0.75rem, 4vw, 3rem);
+}
+
+.app-skip-link {
+  position: absolute;
+  z-index: 3;
+  top: var(--space-xs);
+  inset-inline-start: var(--space-xs);
+  padding: var(--space-xs) var(--space-md);
+  font-weight: 600;
+  color: var(--color-surface);
+  background-color: var(--color-brand-strong);
+  border-radius: var(--radius-pill);
+  text-decoration: none;
+  translate: 0 -180%;
+  transition: translate var(--duration-fast) var(--ease-out);
+}
+
+.app-skip-link:focus-visible {
+  translate: 0 0;
+}

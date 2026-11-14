@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load static site_i18n %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'css/app.css' %}" />
+<link rel="stylesheet" href="{% static 'css/hero.css' %}" />
+<link rel="stylesheet" href="{% static 'css/hero-decor.css' %}" />
+<link rel="stylesheet" href="{% static 'css/language-switcher.css' %}" />
+<link rel="stylesheet" href="{% static 'css/footer.css' %}" />
+{% endblock %}
+
+{% block body %}
+<div class="app-shell">
+  {# Targets the hero <section>, which carries `id="content"`, as in React. #}
+  <a class="app-skip-link" href="#content">{% t "skip.toContent" %}</a>
+  {% include "shell/language_switcher.html" with class_name="app-toolbar" %}
+  <main class="app-main">
+    {% include "landing/hero.html" %}
+  </main>
+  {% include "shell/footer.html" %}
+</div>
+{% endblock %}

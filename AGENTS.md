@@ -6,6 +6,14 @@ Working agreement for humans and AI agents contributing to the **PyCon Latam
 Read this before changing anything. `CLAUDE.md` points here — this file is the
 single source of truth.
 
+> **Migration in progress (React → Django).** The React site described below
+> now lives in `legacy-react/`, so every `src/`, `public/`, `index.html` and
+> `npm` reference in this file is relative to that folder. The Django port is
+> built in `web/` and runs locally only; at the cut-over it moves to Fly.io
+> (decided 2026-11-14). Plan, current phase and decisions:
+> [docs/django-migration.md](./docs/django-migration.md). Every rule here
+> applies to both sites. This file is rewritten for Django at the cut-over.
+
 ---
 
 ## 1. What this site is
@@ -14,16 +22,17 @@ A one-screen announcement. As of today the organising committee has confirmed
 exactly two facts:
 
 - **Where:** Punta Cana, Dominican Republic
-- **When:** to be announced
+- **When:** 26 – 29 August 2027
 
-The landing page therefore says only what the official key art says, in two
-languages:
+The landing page therefore says only what the official key art says, plus the
+dates, in two languages:
 
 | Spanish (primary)            | English                    |
 | ---------------------------- | -------------------------- |
 | PyCon Latam 2027             | PyCon Latam 2027           |
 | Nos vemos en **Punta Cana,** | See you in **Punta Cana,** |
 | República Dominicana         | Dominican Republic         |
+| 26 – 29 de agosto, 2027      | August 26 – 29, 2027       |
 
 **Do not add sections** (agenda, speakers, tickets, sponsors, CFP, countdown)
 until the committee provides the content. Placeholder or invented information
@@ -270,8 +279,17 @@ Before opening a PR, all of `typecheck`, `lint`, `prettier --check .` and
 
 ## 8. Deployment
 
-`.github/workflows/deploy.yml` builds on every push to `main` and publishes
-`dist/` to GitHub Pages.
+`.github/workflows/deploy.yml` builds `legacy-react/` on every push to `main`
+that touches `legacy-react/**` (or the workflow itself), and publishes
+`legacy-react/dist/` to GitHub Pages. The Django site will run on Fly.io (one
+always-on Machine, SQLite on a volume) on `2027.pylatam.org` from the Phase 5
+cut-over. Until then `.github/workflows/fly-deploy.yml` runs the Django checks
+and deploys `web/` on every push to `main` that touches `web/**` to a `noindex`
+test app, `pyconlat-2027-test.fly.dev`. The repository is public, so secrets
+live only in `flyctl secrets` (`DJANGO_SECRET_KEY`) and in the
+`FLY_API_TOKEN` Actions secret (a deploy token scoped to that app). Previews
+are shared from a local `runserver` through ngrok. See
+`docs/django-migration.md`.
 
 The Vite `base` is resolved at build time:
 
@@ -287,10 +305,10 @@ assets.
 
 ---
 
-## 9. When the dates are announced
+## 9. Dates
 
-1. Fill `EVENT.dates.start` / `.end` in `src/content/event.ts`.
-2. Replace the `WebSite` JSON-LD in `index.html` with an `Event` node so the
-   page becomes eligible for event rich results.
-3. Only then consider surfacing the dates in the hero — and ask the committee
-   first, since the current design is deliberately word-for-word the key art.
+The dates were announced and are live: `EVENT.dates` in `src/content/event.ts`
+(Django: `web/core/content.py`), the `Event` JSON-LD in `index.html` (Django:
+`web/core/seo.py`), and the `hero.dates` line. If they ever change, update all
+of those plus the `hero.dates`, `hero.aria`, `meta.*` dictionary keys and the
+`<noscript>` fallback, in both sites.

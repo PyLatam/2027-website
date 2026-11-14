@@ -1,0 +1,72 @@
+name: Deploy Django to Fly.io
+
+# Deploys web/ to the Fly app named in web/fly.toml. Today that is the test
+# app on fly.dev; 2027.pylatam.org stays on GitHub Pages (deploy.yml) until
+# the Phase 5 cut-over. See docs/django-migration.md.
+#
+# Security (the repository is public):
+# - Runs only on pushes to main and manual dispatch, never on pull_request, so
+#   code from forks never runs with the token.
+# - FLY_API_TOKEN is a deploy token scoped to this one app
+#   (`flyctl tokens create deploy -a <app>`), stored as an Actions secret.
+# - Third-party actions are pinned to full commit SHAs, since they run with
+#   access to the token.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'web/**'
+      - '.github/workflows/fly-deploy.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# One deployment at a time; never cancel a running one mid-deploy.
+concurrency:
+  group: fly-deploy
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+        with:
+          persist-credentials: false
+
+      - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          version: '0.12.13'
+
+      - run: uv sync --frozen
+      - run: uv run ruff format --check .
+      - run: uv run ruff check .
+      - run: uv run python manage.py check
+      - run: uv run python manage.py test
+
+  deploy:
+    needs: verify
+    runs-on: ubuntu-latest
+    environment:
+      name: fly
+      url: https://pyconlat-2027-test.fly.dev/
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+        with:
+          persist-credentials: false
+
+      - uses: superfly/flyctl-actions/setup-flyctl@ed8efb33836e8b2096c7fd3ba1c8afe303ebbff1 # 1.6
+        with:
+          version: '0.5.10'
+
+      - run: flyctl deploy --remote-only
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
