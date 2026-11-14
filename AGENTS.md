@@ -9,7 +9,8 @@ single source of truth.
 > **Migration in progress (React → Django).** The React site described below
 > now lives in `legacy-react/`, so every `src/`, `public/`, `index.html` and
 > `npm` reference in this file is relative to that folder. The Django port is
-> built in `web/` and runs locally only. Plan, current phase and decisions:
+> built in `web/` and runs locally only; at the cut-over it moves to Fly.io
+> (decided 2026-11-14). Plan, current phase and decisions:
 > [docs/django-migration.md](./docs/django-migration.md). Every rule here
 > applies to both sites. This file is rewritten for Django at the cut-over.
 
@@ -280,8 +281,15 @@ Before opening a PR, all of `typecheck`, `lint`, `prettier --check .` and
 
 `.github/workflows/deploy.yml` builds `legacy-react/` on every push to `main`
 that touches `legacy-react/**` (or the workflow itself), and publishes
-`legacy-react/dist/` to GitHub Pages. Changes in `web/` never deploy. The
-Django site has no deploy target yet; see `docs/django-migration.md`.
+`legacy-react/dist/` to GitHub Pages. The Django site will run on Fly.io (one
+always-on Machine, SQLite on a volume) on `2027.pylatam.org` from the Phase 5
+cut-over. Until then `.github/workflows/fly-deploy.yml` runs the Django checks
+and deploys `web/` on every push to `main` that touches `web/**` to a `noindex`
+test app, `pyconlat-2027-test.fly.dev`. The repository is public, so secrets
+live only in `flyctl secrets` (`DJANGO_SECRET_KEY`) and in the
+`FLY_API_TOKEN` Actions secret (a deploy token scoped to that app). Previews
+are shared from a local `runserver` through ngrok. See
+`docs/django-migration.md`.
 
 The Vite `base` is resolved at build time:
 

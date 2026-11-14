@@ -3,8 +3,22 @@
 The PyCon Latam 2027 landing page, being ported from `../legacy-react/`.
 Plan and decisions: [../docs/django-migration.md](../docs/django-migration.md).
 
-**Local only.** Nothing here is deployed, and production hosting has not been
-decided yet.
+**Test deploy only.** Pushes to `main` that touch `web/` deploy it to
+<https://pyconlat-2027-test.fly.dev/> (`noindex`). The real domain moves to
+Fly.io at the Phase 5 cut-over. See "Test deploy" in the migration doc.
+
+## Deploy by hand
+
+From this directory, with [flyctl](https://fly.io/docs/flyctl/) logged in:
+
+```bash
+flyctl deploy --remote-only
+```
+
+Production settings come from `fly.toml` (`[env]`) and from
+`flyctl secrets` (`DJANGO_SECRET_KEY`, which production refuses to start
+without). Never put a secret in `fly.toml` or in the code: the repository is
+public.
 
 ## Run it
 

@@ -3,8 +3,8 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
-    # Only the React site deploys. The Django port in web/ runs locally and
-    # must never trigger a deploy (see docs/django-migration.md).
+    # Only the React site deploys here. The Django port in web/ deploys to a
+    # Fly.io test app through fly-deploy.yml (see docs/django-migration.md).
     paths:
       - 'legacy-react/**'
       - '.github/workflows/deploy.yml'

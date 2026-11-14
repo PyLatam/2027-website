@@ -13,11 +13,20 @@ current phase and decision log.
 | Folder          | What it is                                                      |
 | --------------- | --------------------------------------------------------------- |
 | `legacy-react/` | The React site. Production. Frozen reference for the port.      |
-| `web/`          | The Django port. **Local only, never deployed.**                |
+| `web/`          | The Django port. Test deploy on fly.dev; not on the real domain. |
 
-- Production hosting for Django is **not decided**. Do not assume a static
-  export or a server, and do not add a Django deploy workflow.
-- `deploy.yml` only fires on `legacy-react/**`. Keep it that way.
+- Production hosting for Django is **decided: Fly.io**, one always-on Machine
+  with SQLite on a volume (see "Decided: hosting on Fly.io" in the migration
+  doc). It reaches `2027.pylatam.org` at the Phase 5 cut-over. Until then
+  `web/` deploys only to the test app `pyconlat-2027-test.fly.dev` (personal
+  Fly org, `noindex`), through `fly-deploy.yml` on pushes to `main`.
+- Fly rejects app names containing "latam" (abuse filter), hence `pyconlat`.
+- The repository is public. Secrets live only in `flyctl secrets` and GitHub
+  Actions secrets; never in `fly.toml`, the Dockerfile or the code.
+- There is no staging environment. Previews run on a local `runserver`
+  shared through ngrok.
+- `deploy.yml` only fires on `legacy-react/**`, and `fly-deploy.yml` only on
+  `web/**`. Keep them separate.
 - Never push or deploy without being asked: the user reviews everything locally
   first.
 - Unless a rule says otherwise, `src/…` paths below are relative to

@@ -198,31 +198,85 @@ once the Django site reaches parity and takes over production.
     `.python-version` pins 3.14) with
     `uv run --offline --no-project --with playwright==1.65.1 python -I …/compare.py --chromium …`.
     Start `vite preview` with `setsid`, or it dies with the shell.
-- **Phase 5 — next.** Cut-over and cleanup, blocked on the hosting decision.
+- **Phase 5 — next.** Cut-over and cleanup. Hosting is decided (Fly.io; see
+  the decision log), so the work is a `Dockerfile` and `fly.toml` for `web/`,
+  backups, a test deploy, then the DNS switch and the cleanup.
 
 ## Decision log
 
 | Date       | Decision                                                                 | Status      |
 | ---------- | ------------------------------------------------------------------------ | ----------- |
 | 2026-11-12 | Move the React site to `legacy-react/`, build Django in `web/`           | Decided     |
-| 2026-11-12 | Django runs **locally only** for now; nothing in `web/` is deployed      | Decided     |
+| 2026-11-12 | Django runs **locally only** for now; nothing in `web/` is deployed      | Superseded (2026-11-14: test deploy) |
 | 2026-11-12 | `deploy.yml` only fires on `legacy-react/**` changes, so it stays separate | Decided     |
-| 2026-11-12 | Production hosting for Django (static export to GitHub Pages vs. server) | **Pending** |
+| 2026-11-12 | Production hosting for Django (static export to GitHub Pages vs. server) | Decided: Fly.io (2026-11-14) |
 | 2026-11-12 | Full Python port of the scene, not hybrid (`django-vite` serving React)  | Decided     |
 | 2026-11-12 | Scene parity means identical SVG except React-generated (`useId`) ids    | Decided     |
+| 2026-11-14 | Production runs on Fly.io: one always-on Machine, SQLite on a volume     | Decided     |
+| 2026-11-14 | No staging deploy; previews run locally and are shared through ngrok     | Decided     |
+| 2026-11-14 | Test deploy of `web/` to `pyconlat-2027-test.fly.dev`, auto-deployed from `main` | Decided     |
 
-### Pending: hosting
+### Decided: hosting on Fly.io
 
-GitHub Pages only serves static files, so it cannot run Django. Options:
+Production moves to Fly.io at the cut-over (Phase 5). The landing page is
+static today, but 2027 adds login, attendees and speakers inside this Django
+app, so a server is needed anyway; a static export would only be a detour.
 
-- **Static export.** Django renders the page to HTML at build time (e.g.
-  `django-distill` or a management command) and the output keeps deploying to
-  GitHub Pages under the same domain. No running server, no cost.
-- **Server.** A real host (Fly.io, Render, a VPS…). Needed only once the site
-  gains dynamic features (registration, CFP, an admin for the committee).
+- **Shape.** One `shared-cpu-1x` Machine with 512 MB in `iad`, always on
+  (`auto_stop_machines = "off"`, `min_machines_running = 1`), so there are no
+  cold starts. About US$4/month with a 1 GB volume (prices checked
+  2026-11-14; budget cap is US$10/month).
+- **Database.** SQLite on a Fly volume. The expected load is about 200
+  registrations, 500 at most. Consequences: a single Machine (a volume
+  attaches to one Machine), a few seconds of downtime per deploy, and
+  migrations run at container start, because `release_command` runs on a
+  temporary Machine without the volume.
+- **Backups.** Fly's daily volume snapshots plus continuous Litestream
+  replication to object storage. Both must be in place before any real user
+  data is stored.
+- **Domain.** `2027.pylatam.org` moves from GitHub Pages to Fly
+  (`fly certs add` plus a record in Google Cloud DNS) at the cut-over only.
+- **Language.** The server keeps the Phase 2 resolution order (`?lang=` >
+  cookie > `Accept-Language` > Spanish). URLs do not change.
+- **Accounts.** Experiments run in a personal Fly organization. Production
+  lives in a PyLatam organization with both maintainers as members.
+- **Previews.** There is no staging deployment. New versions are shown from a
+  maintainer's local `runserver`, shared through ngrok.
+- **Rejected.** Static export to GitHub Pages (no room for login or a
+  database); Render (free tier sleeps, and paid compute plus a database
+  exceeds the budget); Railway (viable, but usage-based billing is less
+  predictable); PythonAnywhere (US$10, little control); Cloud Run (ephemeral
+  filesystem rules out SQLite, and custom-domain mapping is in Preview);
+  Hetzner (about US$20/month in the US after the 2026 increases); a VPS
+  (viable, but more maintenance than Fly for no gain at this size).
 
-Until this is decided, production keeps deploying `legacy-react/` and nothing
-in `web/` may assume either option.
+Until the cut-over, `deploy.yml` keeps deploying `legacy-react/` to the real
+domain.
+
+### Test deploy (2026-11-14)
+
+`web/` runs on a test app in the personal Fly organization:
+<https://pyconlat-2027-test.fly.dev/>. It is the production shape (one
+Machine, gunicorn, WhiteNoise, `web/Dockerfile`, `web/fly.toml`) without a
+volume, because the site has no database yet. Every response carries
+`X-Robots-Tag: noindex` (`DJANGO_NOINDEX=1`), so it never competes with the
+real domain.
+
+- **Name.** Fly's abuse filter rejects app names containing "latam", hence
+  `pyconlat`. Custom domains are not affected.
+- **Deploys.** `.github/workflows/fly-deploy.yml` runs the Django checks and
+  then `flyctl deploy --remote-only` on pushes to `main` that touch `web/**`.
+  It never runs on `pull_request`, so fork code never sees the token.
+- **Secrets.** The repository is public. `DJANGO_SECRET_KEY` lives in
+  `flyctl secrets`, and production refuses to start without it.
+  `FLY_API_TOKEN` is a deploy token scoped to this one app, stored as an
+  Actions secret. Third-party actions are pinned to commit SHAs.
+- **First deploy.** On a first deploy Fly creates two Machines; pass
+  `--ha=false` (or `flyctl scale count 1` afterwards).
+- **Before the cut-over.** Serve `og-image.jpg` from the site root (the meta
+  tags point at `/og-image.jpg`), create the app in the PyLatam organization
+  with its own token, add the volume and backups once there is a database,
+  and raise `DJANGO_HSTS_SECONDS`.
 
 ### Decided: full Python port of the scene
 
